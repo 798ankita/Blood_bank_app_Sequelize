@@ -19,7 +19,7 @@ var getUser = async (req,res) => {
 //create new user
 var postUsers = async (req,res) => {
     var postData = req.body;
-    if(postData.length>1){
+     if(postData.length>1){
         var data = await User.bulkCreate(postData);     
     } else{
         var data = await User.create(postData); 
