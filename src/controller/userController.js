@@ -1,57 +1,64 @@
-var db = require('../config/index')
-var User = db.user;
-//get all users
-var getUsers = async (req,res) => {
-    const data = await User.findAll({});
-    res.status(200).json({data:data});
-} 
-
-//get one user
-var getUser = async (req,res) => {
-    const data = await User.findOne({
-        where:{
-            id:req.params.id
-        }
-    });
-    res.status(200).json({data:data});
-} 
+// const  db = require('../models/index');
+const service = require('../services/user_service');
+const md5 = require('md5');
+// const  User = db.user;
 
 //create new user
-var postUsers = async (req,res) => {
-    var postData = req.body;
-     if(postData.length>1){
-        var data = await User.bulkCreate(postData);     
-    } else{
-        var data = await User.create(postData); 
-    } 
-    res.status(200).json({data:data});
+const postUsers = async (req,res) => {
+    if (!req.body.username || !req.body.password) {
+        res.status(400).send({
+            msg: 'Please enter username and password.'
+        });
+    }
+    else{
+        const data = await service.postUsers({
+            name: req.body.name,
+                    username: req.body.username,
+                    password:md5(req.body.password),
+                    gender: req.body.gender,
+                    contact: req.body.contact,
+                    address: req.body.address,
+                    state: req.body.state,
+                    city: req.body.city,
+                    email: req.body.email,
+                    profile:req.body.profile,
+                    role:req.body.role,
+                    age:req.body.age,
+                    blood_group:req.body.blood_group,
+                    last_donation_date:req.body.last_donation_date,
+                    created_by:req.body.username,
+                    updated_by: req.body.username,
+                    is_active:"active",
+                })
+                    res.send(data);
+        console.log(req.body);
+        
+        
+    }
+   
+    // }else {
+    //     user.create({
+    //         name: req.body.name,
+    //         username: req.body.username,
+    //         password:md5(req.body.password),
+    //         gender: req.body.gender,
+    //         contact: req.body.contact,
+    //         address: req.body.address,
+    //         state: req.body.state,
+    //         city: req.body.city,
+    //         email: req.body.email,
+    //         profile:req.body.profile,
+    //         role:req.body.role,
+    //         age:req.body.age,
+    //         blood_group:req.body.blood_group,
+    //         last_donation_date:req.body.last_donation_date,
+    //         created_by:req.body.created_by
+    //     }).then((user) => res.status(201).send(user)).catch((error) => {
+    //         console.log(error);
+    //         res.status(400).send(error);
+    //     });
+    // }
 }
-
-//delete a user
-var deleteUser = async (req,res) => {
-    const data = await User.destroy({
-        where:{
-            id:req.params.id
-        }
-    });
-    res.status(200).json({data:data});
-} 
-
-//update a user
-var patchUser = async (req,res) => {
-    var updatedData = req.body;
-    const data = await User.update(updatedData,{
-        where:{
-            id:req.params.id
-        }
-    });
-    res.status(200).json({data:data});
-} 
-
 module.exports = {
-    getUsers,
-    getUser,
     postUsers,
-    deleteUser,
-    patchUser
 }
