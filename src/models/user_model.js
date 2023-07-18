@@ -1,6 +1,6 @@
 module.exports = (sequelize,DataTypes) =>{
 const User = sequelize.define('User', {
-// Model attributes are defined here
+/* Model attributes are defined here*/
   name:{
    type: DataTypes.STRING
   },
@@ -33,9 +33,6 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  profile:{
-    type:DataTypes.STRING,
-},
  role:{
   type:DataTypes.ENUM("user","blood_bank","super_user"),
  },
@@ -44,10 +41,6 @@ age:{
 },
 blood_group:{
   type:DataTypes.STRING,
-},
-last_donation_date:{
-  type:DataTypes.DATE,
- 
 },
 created_by:{
   type: DataTypes.STRING,
