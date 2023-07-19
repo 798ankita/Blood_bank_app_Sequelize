@@ -1,17 +1,20 @@
-const {Sequelize,DataTypes} = require('sequelize');
+require("dotenv").config();
+const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = new Sequelize(
-  'blood_bank_management',
-  'root', 
-  '', 
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PWD,
   {
-    host: 'localhost',
-    logging: false ,
-    dialect: 'mysql'
-  });
-  try {
-    sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error)
+    host: process.env.DB_HOST,
+    logging: false,
+    dialect: "mysql",
   }
-   module.exports = sequelize ;
+);
+try {
+  sequelize.authenticate();
+  console.log("Connection has been established successfully.");
+} 
+catch (error) {
+console.error("Unable to connect to the database:", error);
+}
+module.exports = sequelize;
