@@ -1,14 +1,15 @@
 const service = require('../services/user_service');
-const md5 = require('md5');
+const bcrypt = require('bcrypt');
 
 //controller for registration
 const postUsers = async (req,res) => {
     const email = await service.checkEmail(req.body.email);
-    if(email == null){
+    const username = await service.checkUsername(req.body.username);
+    if(email == null && username == null){
         const data = await service.postUsers({
             name: req.body.name,
             username: req.body.username,
-            password:md5(req.body.password),
+            password:await bcrypt.hash(req.body.password,10),
             gender: req.body.gender,
             contact: req.body.contact,
             address: req.body.address,
@@ -31,10 +32,10 @@ const postUsers = async (req,res) => {
             console.log(req.body);  
     }
     else{
-        res.status(404).json({
-            status:"404",
+        res.status(400).json({
+            status:"400",
             data:"",
-            error: "User with this email already exist"
+            error: "User with this email or username already exist"
         })
     }
 }
@@ -75,6 +76,9 @@ const deleteUser = async (req,res) => {
         });
 } 
 
-
+// login a user
+const loginUser = async (req,res) => {
+    const data = await service.checkUsername(req.body.username)
+}
 
 module.exports = {postUsers,getUsers,getUser,updatedUser,deleteUser}
