@@ -1,5 +1,6 @@
 const Joi = require("joi");
-
+const jwt = require('jsonwebtoken');
+const secretKey = "5C2384E829DF83F5";
 /*@Params:user
   @Description:function to validate user data during registration
  */
@@ -32,4 +33,9 @@ const userUtils = (user) => {
 
   return schema.validate(user);
 };
-module.exports = userUtils;
+
+const jwtlogin = (data) =>{
+  return jwt.sign({data},secretKey, {expiresIn:"300s"});
+};
+
+module.exports = {userUtils,jwtlogin};
