@@ -20,4 +20,9 @@ const data = (req, res, next) => {
   }
 };
 
+const login =(req,res,next) => {
+    data = req.body;
+    const token = 
+}
+
 module.exports = data;
