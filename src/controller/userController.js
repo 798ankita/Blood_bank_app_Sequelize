@@ -77,8 +77,35 @@ const deleteUser = async (req,res) => {
 } 
 
 // login a user
-const loginUser = async (req,res) => {
-    const data = await service.checkUsername(req.body.username)
-}
 
-module.exports = {postUsers,getUsers,getUser,updatedUser,deleteUser}
+const loginUser = async (req,res) => {
+    const loginData = await service.loginAuth(req.body.username);
+    const password = req.body.password;
+    // console.log(loginData.username);
+    if (loginData){
+        if(await bcrypt.compare(loginData.password, password)){
+        res.status(200).json({
+            status:"200",
+            data:loginData,
+            message:"User login successfully",
+            token:req.token
+        });
+    }else{
+        res.status(400).json({
+            status:"400",
+            data:"",
+            message:"invalid"});
+    }
+    }
+
+    else{
+        res.status(404).json({
+            status:"404",
+            data:"",
+            message:"Unauthorised user",
+           
+    } )
+
+}
+}
+module.exports = {postUsers,getUsers,getUser,updatedUser,deleteUser,loginUser};
