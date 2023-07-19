@@ -108,10 +108,10 @@ exports.updateUser = async (id,data) => {
   */
 exports.loginAuth = async (username) => {
   try {
-    const user = await User.update ({ where: { username: username }})
+    const user = await User.findOne({ where: { username: username }})
     return user;
   }
    catch (err) {
-   throw err;
+   console.log("user not exist")
    }
   };
