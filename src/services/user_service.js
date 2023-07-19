@@ -29,15 +29,65 @@ exports.checkEmail = async (userMail) => {
     }
   };
 
-/*@Params:userdData
-  @Description:This function is used to get all users data
-  */
+/*@Params:usersData
+  @Description:function to get all users data
+*/
 exports.getUsers = async (usersData) => {
   try {
-    await sequelize.sync();
     const users = await User.findAll({});
     return users;
   } catch (err) {
     throw err;
   }
 };
+
+/*@Params:userData
+  @Description:function to get one user data
+  */
+exports.getUser = async (id) => {
+  try {
+    const user = await User.findOne({
+      where:{
+        id:id
+      }    
+    });
+    return user;
+  } 
+  catch (err) {
+  throw err;
+  }
+};
+
+/*@Params:userData
+  @Description:function to update a user data
+  */
+exports.updateUser = async (id,data) => {
+  try {
+    const user = await User.update(data,{
+      where:{
+        id:id
+      }    
+  });
+    return user;
+  } 
+   catch (err) {
+   throw err;
+   }
+};
+
+/*@Params:id
+  @Description:function to delete a user
+ */
+  exports.deleteUser = async (id) => {
+    try {
+      const user = await User.destroy({
+        where:{
+          id
+        }
+      });
+      return user;
+    } 
+    catch (err) {
+    throw err;
+    }
+  };

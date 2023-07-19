@@ -23,22 +23,21 @@ const postUsers = async (req,res) => {
             is_active:"active",
             is_deleted:false,
         })
-            res.json({
-                Status:"200",
+            res.status(201).json({
+                Status:"201",
                 Data:data,
                 Message:"User created successfully"
             });
             console.log(req.body);  
     }
     else{
-        res.json({
+        res.status(200).json({
             status:"200",
             data:"no data",
             error: "User with this email already exist"
         })
     }
-        
-    }
+}
 
 //controller to get all users
 const  getUsers = async (req,res) => {
@@ -50,34 +49,32 @@ const  getUsers = async (req,res) => {
 });
  } 
 
-// //get one user
-// const getUser = async (req,res) => {
-//     const data = await User.findOne({
-//         where:{
-//             id:req.params.id
-//         }
-//     });
-//     res.status(200).json({data:data});
-// } 
+//update a user
+const updatedUser = async (req,res) => {
+const data = await service.updateUser(req.params.id,req.body);
+res.status(200).json({
+    status:"201",
+    data:data,
+    message:"user data updated successfully"
+});
+} 
+
+//get one user
+const getUser = async (req,res) => {
+const data = await service.getUser(req.params.id,req.body);
+res.status(200).json({data:data});
+} 
+
 //delete a user
-// const deleteUser = async (req,res) => {
-//     const data = await User.destroy({
-//         where:{
-//             id:req.params.id
-//         }
-//     });
-//     res.status(200).json({data:data});
-// } 
+const deleteUser = async (req,res) => {
+   const data = await service.deleteUser(req.params.id);
+        res.status(200).json({
+            status:"200",
+            data:data,
+            message:"User deleted successfully"
+        });
+} 
 
-// //update a user
-// const patchUser = async (req,res) => {
-//     var updatedData = req.body;
-//     const data = await User.update(updatedData,{
-//         where:{
-//             id:req.params.id
-//         }
-//     });
-//     res.status(200).json({data:data});
-// } 
 
-module.exports = {postUsers,getUsers}
+
+module.exports = {postUsers,getUsers,getUser,updatedUser,deleteUser}
