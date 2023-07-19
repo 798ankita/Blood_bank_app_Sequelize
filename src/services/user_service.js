@@ -7,7 +7,6 @@ const sequelize = db.sequelize;
 */
 exports.postUsers = async (userData) => {
   try {
-    await sequelize.sync();
     const user = await User.create(userData);
     return user;
   } catch (err) {
@@ -20,7 +19,6 @@ exports.postUsers = async (userData) => {
 */
 exports.checkEmail = async (userMail) => {
     try {
-      await sequelize.sync();
       const user = await User.findOne({ where: { email:userMail } });
       return user;
     } 
@@ -28,6 +26,19 @@ exports.checkEmail = async (userMail) => {
     throw err;
     }
   };
+
+  /* @Params:username
+   @Description:This function find existing user with username
+*/
+exports.checkUsername = async (username) => {
+  try {
+    const user = await User.findOne({ where: { username:username } });
+    return user;
+  } 
+  catch (err) {
+  throw err;
+  }
+};
 
 /*@Params:usersData
   @Description:function to get all users data
@@ -46,7 +57,7 @@ exports.getUsers = async (usersData) => {
   */
 exports.getUser = async (id) => {
   try {
-    const user = await User.findOne({
+    const user = await User.findOne(data,{
       where:{
         id:id
       }    
@@ -90,4 +101,17 @@ exports.updateUser = async (id,data) => {
     catch (err) {
     throw err;
     }
+  };
+
+  /*@Params:userData
+  @Description:function to update a user data
+  */
+exports.loginAuth = async (username) => {
+  try {
+    const user = await User.update ({ where: { username: username }})
+    return user;
+  }
+   catch (err) {
+   throw err;
+   }
   };
