@@ -24,16 +24,16 @@ const postUsers = async (req,res) => {
             is_deleted:false,
         })
             res.status(201).json({
-                Status:"201",
-                Data:data,
-                Message:"User created successfully"
+                status:"201",
+                data:data,
+                message:"User created successfully"
             });
             console.log(req.body);  
     }
     else{
-        res.status(200).json({
-            status:"200",
-            data:"no data",
+        res.status(404).json({
+            status:"404",
+            data:"",
             error: "User with this email already exist"
         })
     }
