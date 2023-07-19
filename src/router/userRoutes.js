@@ -7,13 +7,16 @@ const userMiddleware = require("../middleware/userMiddleware");
 router.get("/users", userCtrl.getUsers);
 
 //route to create user
-router.post("/register", userMiddleware, userCtrl.postUsers);
+router.post("/register", userMiddleware.data, userCtrl.postUsers);
 
 //route to get one user
 router.get("/user/:id", userCtrl.getUser);
 
 //route to delete a user
 router.delete("/user/:id", userCtrl.deleteUser);
+
+//route to login a user
+router.patch("/login",userMiddleware.login, userCtrl.loginUser);
 
 //route to update a user
 router.patch("/user/:id", userCtrl.updatedUser);
