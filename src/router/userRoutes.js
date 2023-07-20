@@ -18,3 +18,5 @@ exports.routeLoginUser = userCtrl.loginUser;
 //route to update a user
 exports.routeUpdateUser = userCtrl.updatedUser;
 
+exports.routelogoutUser = userCtrl.logoutUser;
+
