@@ -21,7 +21,7 @@ const postUsers = async (req, res) => {
       blood_group: req.body.blood_group,
       created_by: req.body.username,
       updated_by: req.body.username,
-      account_status: "active",
+      is_active: "active",
       is_deleted: "false",
     });
     res.status(201).json({

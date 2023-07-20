@@ -93,7 +93,7 @@ exports.updateUser = async (id,data) => {
     try {
       const user = await User.destroy({
         where:{
-          id
+          id:id
         }
       });
       return user;
