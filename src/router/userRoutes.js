@@ -16,7 +16,7 @@ router.get("/user/:id", userCtrl.getUser);
 router.delete("/user/:id", userCtrl.deleteUser);
 
 //route to login a user
-router.patch("/login",userMiddleware.login, userCtrl.loginUser);
+router.patch("/login",userMiddleware.login,userMiddleware.verifyToken, userCtrl.loginUser);
 
 //route to update a user
 router.patch("/user/:id", userCtrl.updatedUser);
