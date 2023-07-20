@@ -22,7 +22,7 @@ const postUsers = async (req, res) => {
       created_by: req.body.username,
       updated_by: req.body.username,
       is_active: "active",
-      is_deleted: false,
+      is_deleted: "false",
     });
     res.status(201).json({
       status: "201",
