@@ -1,4 +1,4 @@
-const userMiddleware = require("../utils/joiutils");
+const userMiddleware = require("../utils/user_utils");
 const jwt = require('jsonwebtoken');
 
 /*@Params:(req, res, next)
@@ -14,6 +14,20 @@ const data = (req, res, next) => {
     res.status(400).send({
       status: "400",
       message: "error occured while creating user",
+      error: response.error.details[1].message,
+    });
+  } else {
+    next();
+  }
+}
+
+const updatedUser = (req, res, next) => {
+  user = req.body;
+  response = userMiddleware.updateUser(user);
+  if (response.error) {
+    res.status(400).send({
+      status: "400",
+      message: "error occured while updating user",
       error: response.error.details[1].message,
     });
   } else {
@@ -50,4 +64,4 @@ const verifyToken = (req, res, next) => {
 
 
 
-module.exports = {data,login,verifyToken};
+module.exports = {data,updatedUser,login,verifyToken};
