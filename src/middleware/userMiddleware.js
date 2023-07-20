@@ -1,4 +1,5 @@
 const userMiddleware = require("../utils/joiutils");
+const jwt = require('jsonwebtoken');
 
 /*@Params:(req, res, next)
   @Request:req.body data
@@ -18,15 +19,35 @@ const data = (req, res, next) => {
   } else {
     next();
   }
-};
+}
 
 //login middleware with jwt token
 const login =(req,res,next) => {
     const data = req.body;
-    const token =userMiddleware.jwtlogin(data);
+    const token =userMiddleware.jwtLogin(data);
     console.log(token);
     req.token = token;
-    next()
+    next();
 }
 
-module.exports = {data,login};
+//middleware to verify jwt token
+const verifyToken = (req, res, next) => {
+  let token = req.headers["x-access-token"];
+  if (!token) {
+    return res.status(403).send({
+      message: "No token provided!"
+    });
+  }
+  jwt.verify(token,process.env.JWT_SECRET_KEY, async (err) => {
+    if (err) {
+      return res.status(401).send({
+        message: "Unauthorized!"
+      });
+    }
+    next();
+  });
+};
+
+
+
+module.exports = {data,login,verifyToken};
