@@ -1,8 +1,8 @@
 const userMiddleware = require("../utils/user_utils");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 /*@Params:(req, res, next)
-  @Request:req.body data
+  @Request:req.body
   @Response:res.status(400)
   @Description:Middleware for user registration
 */
@@ -11,7 +11,7 @@ const data = (req, res, next) => {
   user = req.body;
   response = userMiddleware.userUtils(user);
   if (response.error) {
-    res.status(400).send({
+    res.status(400).json({
       status: "400",
       message: "error occured while creating user",
       error: response.error.details[1].message,
@@ -19,13 +19,17 @@ const data = (req, res, next) => {
   } else {
     next();
   }
-}
+};
 
+/*@params:req,res,next,
+  @Request:req.body
+  @Response:res.status(400)
+  @Description:middleware to update user data*/
 const updatedUser = (req, res, next) => {
   user = req.body;
   response = userMiddleware.updateUser(user);
   if (response.error) {
-    res.status(400).send({
+    res.status(400).json({
       status: "400",
       message: "error occured while updating user",
       error: response.error.details[1].message,
@@ -33,35 +37,40 @@ const updatedUser = (req, res, next) => {
   } else {
     next();
   }
-}
+};
 
-//login middleware with jwt token
-const login =(req,res,next) => {
-    const data = req.body;
-    const token =userMiddleware.jwtLogin(data);
-    console.log(token);
-    req.token = token;
-    next();
-}
+/*@params:req,res,next
+  @Request:req.body
+  @Description:login middleware with jwt token*/
+const login = (req, res, next) => {
+  const data = req.body;
+  const token = userMiddleware.jwtLogin(data);
+  console.log(token);
+  req.token = token;
+  next();
+};
 
-//middleware to verify jwt token
+/*@params:req,res,next
+  @Request:req.body
+  @Response:res.status(403),res.status(401)
+  @description:middleware to verify jwt token*/
 const verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  const token = req.headers["x-access-token"];
   if (!token) {
-    return res.status(403).send({
-      message: "No token provided!"
+    return res.status(403).json({
+      status: "403",
+      message: "No token provided!",
     });
   }
-  jwt.verify(token,process.env.JWT_SECRET_KEY, async (err) => {
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async (err) => {
     if (err) {
-      return res.status(401).send({
-        message: "Unauthorized!"
+      return res.status(401).json({
+        status: "401",
+        message: "Unauthorized user!",
       });
     }
     next();
   });
 };
 
-
-
-module.exports = {data,updatedUser,login,verifyToken};
+module.exports = { data, updatedUser, login, verifyToken };
