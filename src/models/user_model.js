@@ -52,9 +52,9 @@ updated_by:{
 },
 is_deleted:{
   type: DataTypes.ENUM("true","false"),
-  defaultValue : "false"
-  
+  defaultValue : "false"  
 },
+
 status:{
   type:DataTypes.ENUM("active", "deactivate"),
   defaultValue : "active"
