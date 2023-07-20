@@ -27,8 +27,8 @@ exports.checkEmail = async (userMail) => {
     }
   };
 
-  /* @Params:username
-   @Description:This function find existing user with username
+/*@Params:username
+  @Description:This function find existing user with username
 */
 exports.checkUsername = async (username) => {
   try {
