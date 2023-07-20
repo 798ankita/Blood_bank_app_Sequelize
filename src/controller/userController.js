@@ -21,7 +21,7 @@ const postUsers = async (req, res) => {
       blood_group: req.body.blood_group,
       created_by: req.body.username,
       updated_by: req.body.username,
-      is_active: "active",
+      account_status: "active",
       is_deleted: "false",
     });
     res.status(201).json({
@@ -82,7 +82,8 @@ const loginUser = async (req, res) => {
     console.log(loginData.password);
     if (loginData != null) {
       if (await bcrypt.compare(req.body.password, loginData.password)) {
-        // Passwords match
+       
+        // Passwords matched
         return res.status(200).json({
           status: "200",
           data: loginData,
@@ -94,7 +95,7 @@ const loginUser = async (req, res) => {
         return res.status(401).json({
           status: "401",
           data: "",
-          message: "your password is incorrect",
+          message: "Invalid credentials",
         });
       }
     } else {
@@ -112,6 +113,19 @@ const loginUser = async (req, res) => {
     });
   }
 };
+
+// function to logout user
+const logoutUser = async (req, res) => {
+  const token = req.headers["x-access-token"];
+  jwt.sign(token, "", { expiresIn: 1 } , (logout, err) => {
+  if (logout) {
+  res.send({msg : 'You have been Logged Out' });
+  } else {
+  res.send({msg:'Error'});
+  }
+  });
+};
+
 module.exports = {
   postUsers,
   getUsers,
@@ -119,4 +133,5 @@ module.exports = {
   updatedUser,
   deleteUser,
   loginUser,
+  logoutUser
 };
