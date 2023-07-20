@@ -18,7 +18,10 @@ router.delete("/delete/:id",userMiddleware.verifyToken,userRoutes.routeDeleteUse
 //route to login a user
 router.patch("/login",userMiddleware.login,userRoutes.routeLoginUser);
 
+//route to logout a user
+router.put("/logout/:id",userMiddleware.verifyToken,userRoutes.routelogoutUser);
+
 //route to update a user
-router.patch("/updateUser/:id",userMiddleware.verifyToken,userMiddleware.updatedUser,userRoutes.routeUpdateUser);
+router.put("/updateUser/:id",userMiddleware.verifyToken,userMiddleware.updatedUser,userRoutes.routeUpdateUser);
 
 module.exports = router;
