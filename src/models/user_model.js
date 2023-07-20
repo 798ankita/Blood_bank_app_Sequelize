@@ -61,7 +61,11 @@ status:{
 }
 }, {
     tableName: 'users'
-});
+},
+{
+  paranoid: true,
+}
+);
 
 return User;
 }
