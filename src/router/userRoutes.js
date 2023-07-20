@@ -13,12 +13,12 @@ router.post("/register", userMiddleware.data, userCtrl.postUsers);
 router.get("/user/:id", userCtrl.getUser);
 
 //route to delete a user
-router.delete("/user/:id", userCtrl.deleteUser);
+router.delete("/user/:id",userMiddleware.verifyToken, userCtrl.deleteUser);
 
 //route to login a user
-router.patch("/login",userMiddleware.login,userMiddleware.verifyToken, userCtrl.loginUser);
+router.patch("/login",userMiddleware.login,userCtrl.loginUser);
 
 //route to update a user
-router.patch("/user/:id", userCtrl.updatedUser);
+router.patch("/user/:id",userMiddleware.verifyToken,userCtrl.updatedUser);
 
 module.exports = router;
