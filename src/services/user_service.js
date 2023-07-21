@@ -63,6 +63,7 @@ exports.getUser = async (id) => {
       }    
     });
     return user;
+    console.log(user);
   } 
   catch (err) {
   throw err;
