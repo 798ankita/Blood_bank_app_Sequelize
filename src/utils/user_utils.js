@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 /*@Params:user
   @Description:function to validate user data during registration
  */
@@ -7,10 +7,7 @@ const userUtils = (user) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(40).required(),
 
-    username: Joi.string().alphanum()
-     .min(3)
-    .max(30)
-    .required(),
+    username: Joi.string().alphanum().min(3).max(30).required(),
 
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9@]{3,30}$")),
 
@@ -22,7 +19,10 @@ const userUtils = (user) => {
 
     address: Joi.string().max(100).required(),
 
-    email: Joi.string() .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
+    email: Joi.string().email({
+      minDomainSegments: 2,
+      tlds: { allow: ["com", "net"] },
+    }),
 
     role: Joi.string().min(3).max(40).required(),
 
@@ -31,7 +31,7 @@ const userUtils = (user) => {
     state: Joi.string().max(15).required(),
 
     city: Joi.string().max(15).required(),
-  })
+  });
 
   return schema.validate(user);
 };
@@ -39,50 +39,59 @@ const userUtils = (user) => {
 /*@Params:user
   @Description:function to validate user data while updating
  */
-  const updateUser = (user) => {
-    const schema = Joi.object({
-      name: Joi.string().min(3).max(40).optional(),
-  
-      username: Joi.string().alphanum()
-       .min(3)
-      .max(30)
+const updateUser = (user) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(40).optional(),
+
+    username: Joi.string().alphanum().min(3).max(30).optional(),
+
+    password: Joi.string()
+      .pattern(new RegExp("^[a-zA-Z0-9@]{3,30}$"))
       .optional(),
-  
-      password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9@]{3,30}$")).optional(),
-  
-      gender: Joi.string().max(10).optional(),
-  
-      contact: Joi.number().integer().min(10).optional(),
-  
-      age: Joi.number().integer().min(3).optional(),
-  
-      address: Joi.string().max(100).optional(),
-  
-      email: Joi.string() .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).optional(),
-  
-      role: Joi.string().min(3).max(40).optional(),
-  
-      blood_group: Joi.string().max(15).optional(),
-  
-      state: Joi.string().max(15).optional(),
-  
-      city: Joi.string().max(15).optional(),
-    })
-  
-    return schema.validate(user);
-  };
 
+    gender: Joi.string().max(10).optional(),
 
-//token validation
-const jwtLogin = (data) =>{
-  // console.log(data);
-  return jwt.sign({data},process.env.JWT_SECRET_KEY, {expiresIn:"600s"});
+    contact: Joi.number().integer().min(10).optional(),
+
+    age: Joi.number().integer().min(3).optional(),
+
+    address: Joi.string().max(100).optional(),
+
+    email: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+      .optional(),
+
+    role: Joi.string().min(3).max(40).optional(),
+
+    blood_group: Joi.string().max(15).optional(),
+
+    state: Joi.string().max(15).optional(),
+
+    city: Joi.string().max(15).optional(),
+  });
+
+  return schema.validate(user);
 };
 
-//function to send responses
+//token validation
+const jwtLogin = (data) => {
+  // console.log(data);
+  return jwt.sign({ data }, process.env.JWT_SECRET_KEY, { expiresIn: "600s" });
+};
 
-// const sendResponse = () => {
+const success = (res, data, message, statuscode) => {
+  res.status(statuscode).json({
+    status: statuscode,
+    data: data,
+    message:message,
+  });
+};
 
-// }
-
-module.exports = {userUtils,updateUser,jwtLogin};
+const error = (res,error,message, statuscode) => {
+  res.status(statuscode).json({
+    status: statuscode,
+    message:message,
+    error:error
+  });
+};
+module.exports = { userUtils, updateUser, jwtLogin, success, error };
