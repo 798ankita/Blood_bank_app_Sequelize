@@ -1,4 +1,5 @@
-const userMiddleware = require("../utils/user_utils");
+const userMiddleware= require("../utils/user_utils");
+const {success,error} = require("../utils/user_utils")
 const jwt = require("jsonwebtoken");
 
 /*@Params:(req, res, next)
@@ -11,11 +12,7 @@ const data = (req, res, next) => {
   user = req.body;
   response = userMiddleware.userUtils(user);
   if (response.error) {
-    res.status(400).json({
-      status: "400",
-      message: "error occured while creating user",
-      error: response.error.details[1].message,
-    });
+    error(res,response.error.details[1].message,"error occured while creating user",400);
   } else {
     next();
   }
@@ -29,11 +26,7 @@ const updatedUser = (req, res, next) => {
   user = req.body;
   response = userMiddleware.updateUser(user);
   if (response.error) {
-    res.status(400).json({
-      status: "400",
-      message: "error occured while updating user",
-      error: response.error.details[1].message,
-    });
+    error(res,response.error.details[1].message,"error occured while updating user",400);
   } else {
     next();
   }
@@ -57,17 +50,11 @@ const login = (req, res, next) => {
 const verifyToken = (req, res, next) => {
   const token = req.headers["x-access-token"];
   if (!token) {
-    return res.status(403).json({
-      status: "403",
-      message: "No token provided!",
-    });
+    error(res,"error","No token provided!",403);
   }
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err) => {
     if (err) {
-      return res.status(401).json({
-        status: "401",
-        message: "Unauthorized user!",
-      });
+      error(res,"error","Unauthorized user!",401);
     }
     next();
   });
