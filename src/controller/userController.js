@@ -1,6 +1,6 @@
 const service = require("../services/user_service");
 const bcrypt = require("bcrypt");
-const {success,error} = require("../utils/user_utils");
+const {success,error,jwtLogin} = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
 
 //controller for registration
@@ -39,13 +39,16 @@ const getUsers = async (req, res) => {
 
 //update a user
 const updatedUser = async (req, res) => {
-  const data = await service.updateUser(req.params.id, req.body);
+  const userData = req.data;
+  const userToken = await service.userId(userData)
+  const data = await service.updateUser(userToken,req.body);
   success(res,data,"user data updated successfully",200);
 };
 
 //get one user
 const getUser = async (req, res) => {
   const data = await service.getUser(req.params.id);
+  // console.log(data);
   success(res,data,"user data",200);
 };
 
