@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
+const getId = require("../services/user_service");
 /*@Params:user
   @Description:function to validate user data during registration
  */
@@ -73,11 +74,17 @@ const updateUser = (user) => {
   return schema.validate(user);
 };
 
-//token validation
-const jwtLogin = (data) => {
-  // console.log(data);
-  return jwt.sign({ data }, process.env.JWT_SECRET_KEY, { expiresIn: "600s" });
-};
+//generate token 
+const jwtLogin = async (data) => {
+  const userId = await getId.checkUsername(data);
+  // console.log(userId);
+  if (userId == null){
+    return "user not exist";
+  }
+  else{
+  return jwt.sign({id:userId.id,username:userId.username},process.env.JWT_SECRET_KEY, { expiresIn: "900s" });
+  }
+  };
 
 const success = (res, data, message, statuscode) => {
   res.status(statuscode).json({
