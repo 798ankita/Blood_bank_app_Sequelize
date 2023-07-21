@@ -1,5 +1,7 @@
 const service = require("../services/user_service");
 const bcrypt = require("bcrypt");
+const {success,error} = require("../utils/user_utils");
+const data = require("../middleware/userMiddleware");
 
 //controller for registration
 const postUsers = async (req, res) => {
@@ -23,56 +25,34 @@ const postUsers = async (req, res) => {
       updated_by: req.body.username,
       is_active: "active",
       is_deleted: "false",
-    });
-    res.status(201).json({
-      status: "201",
-      data: data,
-      message: "User created successfully",
-    });
-    console.log(req.body);
+    });success(res,data,"User created successfully",201);
   } else {
-    res.status(400).json({
-      status: "400",
-      data: "",
-      error: "User with this email or username already exist",
-    });
+    return error(res,null,"User with this email or username already exist",400);
   }
 };
 
 //controller to get all users
 const getUsers = async (req, res) => {
   const data = await service.getUsers({});
-  res.status(200).json({
-    status: "200",
-    data: data,
-    message: "All users data",
-  });
+  success(res,data,"All users data",200);
 };
 
 //update a user
 const updatedUser = async (req, res) => {
   const data = await service.updateUser(req.params.id, req.body);
-  res.status(200).json({
-    status: "201",
-    data: data,
-    message: "user data updated successfully",
-  });
+  success(res,data,"user data updated successfully",200);
 };
 
 //get one user
 const getUser = async (req, res) => {
-  const data = await service.getUser(req.params.id, req.body);
-  res.status(200).json({ data: data });
+  const data = await service.getUser(req.params.id);
+  success(res,data,"user data",200);
 };
 
 //delete a user
 const deleteUser = async (req, res) => {
   const data = await service.deleteUser(req.params.id);
-  res.status(200).json({
-    status: "200",
-    data: data,
-    message: "User deleted successfully",
-  });
+  success(res,data,"User deleted successfully",200);
 };
 
 // login a user
@@ -92,25 +72,14 @@ const loginUser = async (req, res) => {
         });
       } else {
         // Passwords not matched
-        return res.status(401).json({
-          status: "401",
-          data: "",
-          message: "Invalid credentials",
-        });
+        return error(res,"invalid credentials","wrong password",401);
       }
     } else {
       //invalid credentials for login
-      return res.status(401).json({
-        status: "401",
-        message: "Invalid credentials",
-      });
+      return error(res,"error","Invalid credentials",401);
     }
   } catch (err) {
-    console.log(err);
-    return res.status(500).json({
-      status: "500",
-      message: "Internal Server Error",
-    });
+    return error(res,"error","Internal Server Error",500);
   }
 };
 
