@@ -32,7 +32,20 @@ exports.checkEmail = async (userMail) => {
 */
 exports.checkUsername = async (username) => {
   try {
-    const user = await User.findOne({ where: { username:username } });
+    const user = await User.findOne({ where: {username:username } });
+    return user;
+  } 
+  catch (err) {
+  throw err;
+  }
+};
+
+/*@Params:username
+  @Description:This function find existing user's id
+*/
+exports.userId = async (id) => {
+  try {
+    const user = await User.findOne({ where: {id:id } });
     return user;
   } 
   catch (err) {
@@ -63,7 +76,7 @@ exports.getUser = async (id) => {
       }    
     });
     return user;
-    console.log(user);
+    // console.log(user);
   } 
   catch (err) {
   throw err;
