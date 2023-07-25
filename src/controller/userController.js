@@ -1,6 +1,6 @@
 const service = require("../services/user_service");
 const bcrypt = require("bcrypt");
-const {success,error,jwtLogin} = require("../utils/user_utils");
+const {success,error} = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
 
 //controller for registration
