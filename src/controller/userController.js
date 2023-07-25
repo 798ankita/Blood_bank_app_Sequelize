@@ -55,14 +55,18 @@ const getUser = async (req, res) => {
 
 //delete a user
 const deleteUser = async (req, res) => {
-  const data = await service.deleteUser(req.params.id);
+  const userData = req.data;
+  const userToken = await service.userId(userData);
+  const data = await service.deleteUser(userToken.id,req.body);
   success(res,data,"User deleted successfully",200);
 };
 
 // login a user
 
 const loginUser = async (req, res) => {
+
   try {
+    debugger;
     const loginData = await service.loginAuth(req.body.username);
     if (loginData != null) {
       if (await bcrypt.compare(req.body.password, loginData.password)) {
