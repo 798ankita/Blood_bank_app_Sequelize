@@ -43,11 +43,12 @@ exports.checkUsername = async (username) => {
 /*@Params:username
   @Description:This function find existing user's id
 */
-exports.userId = async (id) => {
+exports.userId = async(id) => {
   try {
-    const user = await User.findOne({ where: {id:id } });
+    const user = await User.findOne({ where: {id:id} });
     return user;
   } 
+
   catch (err) {
   throw err;
   }
@@ -76,7 +77,6 @@ exports.getUser = async (id) => {
       }    
     });
     return user;
-    // console.log(user);
   } 
   catch (err) {
   throw err;
@@ -90,7 +90,7 @@ exports.updateUser = async (id,data) => {
   try {
     const user = await User.update(data,{
       where:{
-        id:id
+        id:id 
       }    
   });
     return user;

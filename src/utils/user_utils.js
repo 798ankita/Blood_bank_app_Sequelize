@@ -76,13 +76,16 @@ const updateUser = (user) => {
 
 //generate token 
 const jwtLogin = async (data) => {
-  const userId = await getId.checkUsername(data);
+  console.log(data);
+  const userId = await getId.checkUsername(data.username);
+  // console.log("my Data "+userId.id);
   // console.log(userId);
-  if (userId == null){
-    return "user not exist";
+  if (userId){
+    return jwt.sign({id:userId.id, username:userId.username},process.env.JWT_SECRET_KEY, { expiresIn: "900s" });
+   
   }
   else{
-  return jwt.sign({id:userId.id,username:userId.username},process.env.JWT_SECRET_KEY, { expiresIn: "900s" });
+    return "user not exist";
   }
   };
 

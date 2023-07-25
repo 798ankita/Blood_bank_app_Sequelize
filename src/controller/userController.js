@@ -41,7 +41,7 @@ const getUsers = async (req, res) => {
 const updatedUser = async (req, res) => {
   const userData = req.data;
   const userToken = await service.userId(userData)
-  const data = await service.updateUser(userToken,req.body);
+ const data = await service.updateUser(userToken.id,req.body);
   success(res,data,"user data updated successfully",200);
 };
 
@@ -59,6 +59,7 @@ const deleteUser = async (req, res) => {
 };
 
 // login a user
+
 const loginUser = async (req, res) => {
   try {
     const loginData = await service.loginAuth(req.body.username);
@@ -87,16 +88,16 @@ const loginUser = async (req, res) => {
 };
 
 // function to logout user
-const logoutUser = async (req, res) => {
-  const token = req.headers["x-access-token"];
-  jwt.sign(token, "", { expiresIn: 1 } , (logout, err) => {
-  if (logout) {
-  res.send({msg : 'You have been Logged Out' });
-  } else {
-  res.send({msg:'Error'});
-  }
-  });
-};
+// const logoutUser = async (req, res) => {
+//   const token = req.headers["x-access-token"];
+//   jwt.sign(token, "", { expiresIn: 1 } , (logout, err) => {
+//   if (logout) {
+//   res.send({msg : 'You have been Logged Out' });
+//   } else {
+//   res.send({msg:'Error'});
+//   }
+//   });
+// };
 
 module.exports = {
   postUsers,
@@ -104,6 +105,5 @@ module.exports = {
   getUser,
   updatedUser,
   deleteUser,
-  loginUser,
-  logoutUser
+  loginUser
 };
