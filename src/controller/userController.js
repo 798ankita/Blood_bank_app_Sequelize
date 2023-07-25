@@ -40,6 +40,7 @@ const getUsers = async (req, res) => {
 //update a user
 const updatedUser = async (req, res) => {
   const userData = req.data;
+  console.log(userData);
   const userToken = await service.userId(userData)
  const data = await service.updateUser(userToken.id,req.body);
   success(res,data,"user data updated successfully",200);
@@ -63,7 +64,6 @@ const deleteUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const loginData = await service.loginAuth(req.body.username);
-    console.log(loginData.password);
     if (loginData != null) {
       if (await bcrypt.compare(req.body.password, loginData.password)) {
        
