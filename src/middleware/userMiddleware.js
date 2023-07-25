@@ -58,12 +58,14 @@ const verifyToken = async(req, res, next) => {
     error(res,"error","No token provided!",403);
   }
   const verifyToken = await jwt.verify(token, process.env.JWT_SECRET_KEY,
-   async (err) => {
-    if (err) {
-      error(res,"error","Unauthorized user!",401);
-    }
+  //  async (err) => {
+  //   if (err) {
+  //     error(res,"error","Unauthorized user!",401);
+  //   }
+  // }
+  );
+  req.data = verifyToken
     next();
-  });
 };
 
 module.exports = { data, updatedUser, login, verifyToken };
