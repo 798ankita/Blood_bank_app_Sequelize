@@ -13,7 +13,7 @@ router.post("/register",userMiddleware.data,userRoutes.routeRegisterUsers);
 router.get("/user/:id",userRoutes.routeOneUser);
 
 //route to delete a user
-router.delete("/delete/:id",userMiddleware.verifyToken,userRoutes.routeDeleteUser);
+router.delete("/delete",userMiddleware.verifyToken,userRoutes.routeDeleteUser);
 
 //route to login a user
 router.patch("/login",userMiddleware.login,userRoutes.routeLoginUser);
