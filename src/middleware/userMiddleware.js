@@ -12,7 +12,7 @@ const data = (req, res, next) => {
   user = req.body;
   response = userMiddleware.userUtils(user);
   if (response.error) {
-    error(res,response.error.details[0].message,"error occured while creating user",400);
+    error(res,response.error.details[1].message,"error occured while creating user",400);
   } else {
     next();
   }
@@ -27,7 +27,7 @@ const updatedUser =(req, res, next) => {
   user = req.body;
   response = userMiddleware.updateUser(user);
   if (response.error) {
-    error(res,response.error.details[0].message,"error occured while updating user",400);
+    error(res,response.error.details[1].message,"error occured while updating user",400);
   } else {
     next();
   }
@@ -52,20 +52,21 @@ const login = async(req, res, next) => {
   @Request:req.body
   @Response:res.status(403),res.status(401)
   @description:middleware to verify jwt token*/
-const verifyToken = async(req, res, next) => {
+const verifyToken =(req, res, next) => {
   const token = req.headers["x-access-token"];
-  if (!token) {
-    error(res,"error","No token provided!",403);
-  }
-  const verifyToken = await jwt.verify(token, process.env.JWT_SECRET_KEY,
-  //  async (err) => {
-  //   if (err) {
-  //     error(res,"error","Unauthorized user!",401);
-  //   }
-  // }
-  );
-  req.data = verifyToken
-    next();
+  if (token) {
+    try {
+        const validId = jwt.verify(token, process.env.SECRET_KEY);
+        req.data = validId.id;
+        console.log(req.data);
+        next();
+    } catch (err) {
+        return error(res,"error","Fail to authenticate",500);
+    }
+} else {
+    return error(res,"error","Unauthorised user!",500);
+}
+  
 };
 
 module.exports = { data, updatedUser, login, verifyToken };
