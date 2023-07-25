@@ -1,5 +1,6 @@
 const db = require("../models/index");
 const User = db.user;
+const superUser = db.superUser;
 const sequelize = db.sequelize;
 
 /* @Params:userData
@@ -11,6 +12,18 @@ exports.postUsers = async (userData) => {
     return user;
   } catch (err) {
     throw err;
+  }
+};
+
+/* @Params:superUserData
+   @Description:This function creates superuser
+*/
+exports.postsuperUsers = async (userData) => {
+  try {
+    const user = await superUser.create(userData);
+    return user;
+  } catch (err) {
+    console.log(err);
   }
 };
 
