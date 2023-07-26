@@ -12,9 +12,6 @@ const User = sequelize.define('User', {
   password: {
     type: DataTypes.STRING,
 },
-  gender: {
-    type: DataTypes.STRING,
-  },
   contact: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -36,11 +33,12 @@ const User = sequelize.define('User', {
  role:{
   type:DataTypes.ENUM("user","blood_bank","super_user"),
  },
-age:{
-  type:DataTypes.INTEGER,
-},
 blood_group:{
   type:DataTypes.STRING,
+},
+status:{
+  type:DataTypes.ENUM("active", "deactivate"),
+  defaultValue : "active"
 },
 created_by:{
   type: DataTypes.STRING,
@@ -49,21 +47,12 @@ created_by:{
 updated_by:{
   type: DataTypes.STRING,
   
-},
-is_deleted:{
-  type: DataTypes.ENUM("true","false"),
-  defaultValue : "false"  
-},
-
-status:{
-  type:DataTypes.ENUM("active", "deactivate"),
-  defaultValue : "active"
 }
+
 }, {
-    tableName: 'users'
-},
-{
-  paranoid: true,
+    tableName: 'users',
+    paranoid: true
+    
 }
 );
 
