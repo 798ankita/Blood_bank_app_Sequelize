@@ -12,11 +12,7 @@ const userUtils = (user) => {
 
     password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9@]{3,30}$")),
 
-    gender: Joi.string().max(10).required(),
-
     contact: Joi.number().integer().min(10),
-
-    age: Joi.number().integer().min(3),
 
     address: Joi.string().max(100).required(),
 
@@ -50,11 +46,7 @@ const updateUser = (user) => {
       .pattern(new RegExp("^[a-zA-Z0-9@]{3,30}$"))
       .optional(),
 
-    gender: Joi.string().max(10).optional(),
-
     contact: Joi.number().integer().min(10).optional(),
-
-    age: Joi.number().integer().min(3).optional(),
 
     address: Joi.string().max(100).optional(),
 
