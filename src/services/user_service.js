@@ -142,3 +142,31 @@ exports.loginAuth = async (username) => {
    console.log("user not exist")
    }
   };
+
+// getting all Pending requests from blood bank for registration
+  exports.bloodBankRegisterReq = async() =>
+  {
+    try {
+      const regiteredBldBank = await User.findAll({
+        where:{
+          status:"deactivate"
+        }
+      });
+      return regiteredBldBank ;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  //
+  exports.acceptedRequests =  async (id) =>
+  {
+    try {
+      const regiteredBldBank = await User.update({status:"active"},{where:{id:id}});
+      return regiteredBldBank ;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  
