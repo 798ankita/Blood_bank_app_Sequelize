@@ -43,7 +43,7 @@ const updatedUser =(req, res, next) => {
 const login = async(req, res, next) => {
   const data = req.body;
   const token = await userMiddleware.jwtLogin(data);
-  console.log("my token" +token);
+  // console.log("my token" +token);
   req.token = token;
   next();
 };
