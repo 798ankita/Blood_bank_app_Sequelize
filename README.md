@@ -1,4 +1,12 @@
-Blood_Bank_Management
+Blood_Bank_App
+
+# Run project 
+ npm run start
+
+# Application framework
+express.js
+
+
 
 
 
