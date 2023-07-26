@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const postUsers = async (req, res) => {
   const email = await service.checkEmail(req.body.email);
   const username = await service.checkUsername(req.body.username);
-  if (email == null && username == null && req.body.role == "user") {
+  if (email == null && username == null && req.body.role == "user" /*|| "super_user" */) {
     const data = await service.postUsers({
       name: req.body.name,
       username: req.body.username,
@@ -48,7 +48,15 @@ const postUsers = async (req, res) => {
       "Your request for registration is received and pending for approval!",
       201
     );
-  } else {
+  } else if (req.body.role == "super_user"){
+    return error(
+      res,
+      null,
+      "Can not register to this role,please choose another role!",
+      400
+    );
+  }
+  else{
     return error(
       res,
       null,
@@ -135,7 +143,8 @@ const logoutUser = (req, res) => {
     jwt.sign(token, " ", { expiresIn: 1 }, (logout, err) => {
       if (logout) {
         return success(res, "", "You have been Logged Out", 200);
-      } else {
+      } 
+      else {
         return error(res, "error", "Internal Server Error", 500);
       }
     });
@@ -143,6 +152,45 @@ const logoutUser = (req, res) => {
     console.log(e);
   }
 };
+
+//Registration Requests from blood_bank to super_user
+const pendingRegister = async(req,res) => {
+try {
+  const data = await service.userId(req.data);
+
+  if (data.role =="super_user") {
+  const requestToRegister = await service.bloodBankRegisterReq();
+  if(requestToRegister == null){
+    return success(res,"data not found","No requests available",200);
+  }
+  return success(res,requestToRegister,"All requests",200);
+}
+ return error (res,"error!","do not have permission!",400);
+ }
+ catch (err) {
+  console.log(err);
+}  
+};
+
+//Registration Accepted Requests from blood_bank to super_user
+const AcceptedRequests = async(req,res) => {
+  try {
+    const data = await service.userId(req.data);
+  
+    if (data.role =="super_user") {
+    const requestAccept = await service.acceptedRequests();
+    if(requestAccept == null){
+      return success(res,"data not found","accepted requests not available",200);
+    }
+    return success(res,requestAccept,"All accepted requests",200);
+  }
+   return error (res,"error!","do not have permission!",400);
+   }
+   catch (err) {
+    console.log(err);
+  }  
+  
+  };
 
 module.exports = {
   postUsers,
@@ -152,4 +200,6 @@ module.exports = {
   deleteUser,
   loginUser,
   logoutUser,
+  pendingRegister,
+  AcceptedRequests
 };
