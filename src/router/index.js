@@ -36,4 +36,14 @@ router.post("/register/blood_bank",userMiddleware.data,userRoutes.routeRegisterU
 router.patch("/login/blood_bank",userMiddleware.login,userRoutes.routeLoginUser);
 
 
+
+/*********************************SuperUser_Routes *******************************/
+
+//route to login a super_user
+router.patch("/login/superUser",userMiddleware.login,userRoutes.routeLoginUser);
+
+router.get("/superUser/RequestsPending",userMiddleware.verifyToken,userRoutes.BloodBankRequest);
+
+router.put("/superUser/AcceptRequest",userMiddleware.verifyToken,userMiddleware.updatedUser,userRoutes.AcceptRequest);
+
 module.exports = router;

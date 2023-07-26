@@ -18,5 +18,12 @@ exports.routeLoginUser = userCtrl.loginUser;
 //route to update a user
 exports.routeUpdateUser = userCtrl.updatedUser;
 
+//route to logout a user
 exports.routelogoutUser = userCtrl.logoutUser;
+
+//route to see requests for registrations from blood banks.
+exports.BloodBankRequest = userCtrl.pendingRegister;
+
+//route accept requests for registrations from blood banks.
+exports.AcceptRequest = userCtrl.AcceptedRequests;
 
