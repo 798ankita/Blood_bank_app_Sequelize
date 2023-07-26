@@ -59,12 +59,10 @@ const verifyToken =(req, res, next) => {
         const validId = jwt.verify(token, process.env.JWT_SECRET_KEY);
         console.log(validId);
         req.data = validId.id;
-       
         next();
     } catch (err) {
-      console.log(err);
+      // console.log(err);
         return error(res,"error","Fail to authenticate",500);
-
     }
 } else {
     return error(res,"error","Unauthorised user!",500);
