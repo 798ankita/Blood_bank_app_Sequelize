@@ -1,6 +1,6 @@
 const db = require("../models/index");
 const User = db.user;
-const superUser = db.superUser;
+// const superUser = db.superUser;
 const sequelize = db.sequelize;
 
 /* @Params:userData
