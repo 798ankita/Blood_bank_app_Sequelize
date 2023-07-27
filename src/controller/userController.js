@@ -178,18 +178,16 @@ const AcceptedRequests = async(req,res) => {
     const data = await service.userId(req.data);
   
     if (data.role =="super_user") {
-    const requestAccept = await service.acceptedRequests();
-    if(requestAccept == null){
-      return success(res,"data not found","accepted requests not available",200);
-    }
-    return success(res,requestAccept,"All accepted requests",200);
-  }
-   return error (res,"error!","do not have permission!",400);
+    const requestAccept = await service.acceptedRequests(req.body.username);
+    if(requestAccept != null){
+      return success(res,requestAccept,"your request has been approved",200);
+    };
+ return error (res,"error!","do not have permission!",400);
    }
-   catch (err) {
+  }catch (err) {
     console.log(err);
-  }  
-  
+    return error (res,"error!","Internal server error",500);
+  };  
   };
 
 module.exports = {
