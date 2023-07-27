@@ -159,11 +159,12 @@ exports.loginAuth = async (username) => {
   };
 
   //
-  exports.acceptedRequests =  async (id) =>
+  exports.acceptedRequests =  async (username) =>
   {
     try {
-      const regiteredBldBank = await User.update({status:"active"},{where:{id:id}});
-      return regiteredBldBank ;
+      const acceptRequest = await User.update({status:"active"},
+      {where:{ username : username }});
+      return acceptRequest ;
     } catch (err) {
       console.log(err);
     }
