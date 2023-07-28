@@ -153,17 +153,17 @@ const logoutUser = (req, res) => {
   }
 };
 
-//Registration Requests from blood_bank to super_user
+//Pending Registration Requests of blood_banks to super_user
 const pendingRegister = async(req,res) => {
 try {
   const data = await service.userId(req.data);
 
   if (data.role =="super_user") {
-  const requestToRegister = await service.bloodBankRegisterReq();
-  if(requestToRegister == null){
+  const declineReq = await service.bloodBankRegisterReq();
+  if(declineReq == null){
     return success(res,"data not found","No requests available",200);
   }
-  return success(res,requestToRegister,"All requests",200);
+  return success(res,declineReq,"All requests",200);
 }
  return error (res,"error!","do not have permission!",400);
  }
@@ -172,7 +172,7 @@ try {
 }  
 };
 
-//Registration Accepted Requests from blood_bank to super_user
+//Accept Registration Requests from blood_bank by super_user
 const AcceptedRequests = async(req,res) => {
   try {
     const data = await service.userId(req.data);
@@ -190,6 +190,23 @@ const AcceptedRequests = async(req,res) => {
   };  
   };
 
+  //Decline Registration Requests from blood_bank by super_user
+  const declineRegister = async(req,res) => {
+    try {
+      const data = await service.userId(req.data);
+    
+      if (data.role =="super_user") {
+      const declineReq = await service.declineRequests(req.body.username);
+      if(declineReq !== null){
+        return success(res,declineReq,"your request has been declined",200);
+      }
+      return error (res,"error!","do not have permission!",400);
+    }
+   }catch (err) {
+     console.log(err);
+     return error (res,"error!","Internal server error",500);
+   };  
+   };
 module.exports = {
   postUsers,
   getUsers,
@@ -199,5 +216,6 @@ module.exports = {
   loginUser,
   logoutUser,
   pendingRegister,
-  AcceptedRequests
+  AcceptedRequests,
+  declineRegister
 };
