@@ -26,6 +26,8 @@ router.put("/logout",userMiddleware.verifyToken,userRoutes.routelogoutUser);
 //route to update a user
 router.put("/updateUser",userMiddleware.verifyToken,userMiddleware.updatedUser,userRoutes.routeUpdateUser);
 
+//route to create requests for blood by user
+router.post("/sendBloodRequest",userMiddleware.verifyToken,userRoutes.routeSendBloodRequest);
 
 /*********************************blood_bank_Routes******************************/
 
