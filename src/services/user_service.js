@@ -1,6 +1,8 @@
 const db = require("../models/index");
 const User = db.user;
-// const superUser = db.superUser;
+const action = db.action;
+const bloodBank =db.bloodbank;
+
 const sequelize = db.sequelize;
 
 /* @Params:userData
@@ -53,7 +55,7 @@ exports.checkUsername = async (username) => {
   }
 };
 
-/*@Params:username
+/*@Params:id
   @Description:This function find existing user's id
 */
 exports.userId = async(id) => {
@@ -170,7 +172,7 @@ exports.loginAuth = async (username) => {
     }
   };
 
-  /*@Params:id
+  /*@Params:username
   @Description:function to decline blood bank requests.
  */
   exports.declineRequests = async (username) => {
@@ -187,5 +189,16 @@ exports.loginAuth = async (username) => {
     }
   };
 
-  
+ /* @Params:userData
+   @Description:This function creates requests
+*/
+exports.sendRequest = async (userData) => {
+  try {
+    const request = await action.create(userData);
+    return request;
+  } 
+  catch (err) {
+  throw err;
+  }
+}; 
   
