@@ -20,10 +20,11 @@ if (config.use_env_variable) {
   db.Sequelize = Sequelize;
   db.sequelize = sequelize;
   db.user = require("./user")(sequelize,DataTypes);
-  db.request = require("./actionModel")(sequelize,DataTypes);
+  db.action = require("./action")(sequelize,DataTypes);
+  db.bloodbank = require("./bloodBanks")(sequelize,DataTypes);
   db.sequelize.sync();
   console.log("All models were synchronized successfully.");
-
+ 
 fs
   .readdirSync(__dirname)
   .filter(file => {
