@@ -169,5 +169,23 @@ exports.loginAuth = async (username) => {
       console.log(err);
     }
   };
+
+  /*@Params:id
+  @Description:function to decline blood bank requests.
+ */
+  exports.declineRequests = async (username) => {
+    try {
+      const user = await User.destroy({
+        where:{
+          username:username
+        }
+      });
+      return user;
+    } 
+    catch (err) {
+    throw err;
+    }
+  };
+
   
   
