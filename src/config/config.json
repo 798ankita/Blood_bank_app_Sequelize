@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "blood_bank_management",
+    "database": "my_blood_bank",
     "host": "localhost",
     "dialect": "mysql"
   },
