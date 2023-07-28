@@ -46,4 +46,6 @@ router.get("/superUser/RequestsPending",userMiddleware.verifyToken,userRoutes.Bl
 
 router.put("/superUser/AcceptRequest",userMiddleware.verifyToken,userMiddleware.updatedUser,userRoutes.AcceptRequest);
 
+router.delete("/superUser/declineRequests",userMiddleware.verifyToken,userRoutes.declineRequests);
+
 module.exports = router;
