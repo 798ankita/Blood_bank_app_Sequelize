@@ -19,6 +19,9 @@ exports.routeLoginUser = userCtrl.loginUser;
 //route to update a user
 exports.routeUpdateUser = userCtrl.updatedUser;
 
+//route to send request for blood
+exports.routeSendBloodRequest = userCtrl.sendRequests;
+
 //route to logout a user
 exports.routelogoutUser = userCtrl.logoutUser;
 
