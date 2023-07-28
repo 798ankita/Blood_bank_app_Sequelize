@@ -23,16 +23,16 @@ module.exports = (sequelize, DataTypes) => {
     blood_group: {
       type: DataTypes.STRING
   },
+  action:{
+    type: DataTypes.ENUM("donor","patient"),
+    allowNull: false
+  },
     required_date: {
       type: DataTypes.DATE,
       allowNull: false
     },
     donation_date: {
       type: DataTypes.DATE,
-      allowNull: false
-    },
-    action:{
-      type: DataTypes.ENUM("donor","patient"),
       allowNull: false
     },
     blood_unit:{
