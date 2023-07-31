@@ -50,9 +50,6 @@ module.exports = (sequelize, DataTypes) => {
   created_by:{
     type: DataTypes.STRING,
    
-  },
-  updated_by:{
-    type: DataTypes.STRING, 
   }
   }, {
     sequelize,
