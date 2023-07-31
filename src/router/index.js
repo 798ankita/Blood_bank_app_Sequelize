@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userMiddleware = require("../middleware/userMiddleware");
 const userRoutes = require('./userRoutes');
+const bloodBank = require("./bloodBankRoutes");
 
 
 //*********************************User Routes*********************************/
@@ -26,8 +27,14 @@ router.put("/logout",userMiddleware.verifyToken,userRoutes.routelogoutUser);
 //route to update a user
 router.put("/updateUser",userMiddleware.verifyToken,userMiddleware.updatedUser,userRoutes.routeUpdateUser);
 
+//route to see list of all blood banks.
+router.get("/allBloodBanksList",bloodBank.allBloodBankDetail);
+
 //route to create requests for blood by user
-router.post("/sendBloodRequest",userMiddleware.verifyToken,userRoutes.routeSendBloodRequest);
+router.post("/user/sendBloodRequest",userMiddleware.verifyToken,userRoutes.routeSendBloodRequest);
+
+//route to cancel the request for blood.
+router.patch("/user/cancelBloodRequest",userMiddleware.verifyToken,userRoutes.routeCancelBloodRequest);
 
 /*********************************blood_bank_Routes******************************/
 
@@ -37,7 +44,11 @@ router.post("/register/blood_bank",userMiddleware.data,userRoutes.routeRegisterU
 //route to login a blood_bank
 router.patch("/login/blood_bank",userMiddleware.login,userRoutes.routeLoginUser);
 
+// route to add blood bank details.
+router.post("/addBloodBankDetails",userMiddleware.verifyToken,bloodBank.createBloodBank);
 
+//route to get all created requests for blood by users.
+router.get("")
 
 /*********************************SuperUser_Routes *******************************/
 
