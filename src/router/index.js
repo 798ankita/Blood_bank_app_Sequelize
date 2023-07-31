@@ -48,7 +48,7 @@ router.patch("/login/blood_bank",userMiddleware.login,userRoutes.routeLoginUser)
 router.post("/addBloodBankDetails",userMiddleware.verifyToken,bloodBank.createBloodBank);
 
 //route to get all created requests for blood by users.
-router.get("")
+router.get("/BloodBank/allBloodRequests",userMiddleware.verifyToken,bloodBank.allRequestsForBlood);
 
 /*********************************SuperUser_Routes *******************************/
 
