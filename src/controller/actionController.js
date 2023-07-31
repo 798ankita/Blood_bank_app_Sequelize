@@ -15,3 +15,26 @@ exports.getAllBloodRequests = async (req, res) => {
         return error(res,"error","Internal server error",500);
     }  
   };
+
+  //Accept Registration Requests from blood_bank by super_user
+const acceptBloodRequest = async (req, res) => {
+    try {
+      const data = await userService.userId(req.data);
+      if (data.role == "blood_bank") {
+        const requestAccept = await actionService.acceptBloodRequest(req.body.username);
+        if (requestAccept != null) {
+          return success(
+            res,
+            requestAccept,
+            "your request has been approved",
+            200
+          );
+        }
+        return error(res, "error!", "do not have permission!", 400);
+      }
+    } catch (err) {
+      console.log(err);
+      return error(res, "error!", "Internal server error", 500);
+    }
+  };
+  
