@@ -1,9 +1,8 @@
 const db = require("../models/index");
 const User = db.user;
+const bloodBank = db.bloodBank;
 const action = db.action;
-const bloodBank =db.bloodbank;
-
-const sequelize = db.sequelize;
+// const sequelize = db.sequelize;
 
 /* @Params:userData
    @Description:This function creates users
@@ -160,7 +159,9 @@ exports.loginAuth = async (username) => {
     }
   };
 
-  //
+  /*@Params:username
+  @Description:function to accept blood bank requests.
+ */
   exports.acceptedRequests =  async (username) =>
   {
     try {
@@ -189,8 +190,23 @@ exports.loginAuth = async (username) => {
     }
   };
 
- /* @Params:userData
-   @Description:This function creates requests
+
+  /*@Params:name
+  @Description:This function find existing blood bank name.
+*/
+exports.findName = async (name) => {
+  try {
+    const user = await bloodBank.findOne({ where: {name:name} });
+    return user;
+  } 
+  catch (err) {
+  throw err;
+  }
+};
+
+
+/* @Params:userData
+   @Description:This function creates requests for blood by user.
 */
 exports.sendRequest = async (userData) => {
   try {
@@ -198,7 +214,7 @@ exports.sendRequest = async (userData) => {
     return request;
   } 
   catch (err) {
-  throw err;
+  console.log(err);
   }
 }; 
-  
+
