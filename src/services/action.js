@@ -39,3 +39,17 @@ exports.allRequests = async (data) => {
     throw err;
   }
 };
+
+/*@Params:username
+  @Description:function to accept blood requests created by user.
+ */
+  exports.acceptBloodRequest =  async (username) =>
+  {
+    try {
+      const acceptRequest = await action.update({status:"accepted"},
+      {where:{ username : username }});
+      return acceptRequest ;
+    } catch (err) {
+      console.log(err);
+    }
+  };
