@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.ENUM("donor","patient"),
     allowNull: false
   },
+  bloodBank:{
+    type: DataTypes.STRING,
+    allowNull:false
+  },
     required_date: {
       type: DataTypes.DATE,
       allowNull: false
@@ -40,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
   status:{
-    type:DataTypes.ENUM("pending", "approved","decline"),
+    type:DataTypes.ENUM("pending", "approved","decline","cancelled"),
     defaultValue : "pending"
   },
   created_by:{
