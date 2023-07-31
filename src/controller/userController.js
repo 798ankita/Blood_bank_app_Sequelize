@@ -1,8 +1,11 @@
 const service = require("../services/user_service");
+const actionService = require("../services/action");
+const bloodBankservice =require("../services/bloodBank");
 const bcrypt = require("bcrypt");
 const { success, error } = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
 const jwt = require("jsonwebtoken");
+
 
 //controller for registration
 const postUsers = async (req, res) => {
@@ -73,7 +76,6 @@ const getUsers = async (req, res) => {
 //update a user
 const updatedUser = async (req, res) => {
   const userData = req.data;
-  console.log(userData);
   const userToken = await service.userId(userData);
   const data = await service.updateUser(userToken.id, req.body);
   success(res, data, "user data updated successfully", 200);
@@ -217,36 +219,43 @@ const declineRegister = async (req, res) => {
 
 //controller to create requests for blood by user.
 const sendRequests = async (req, res) => {
-  const bloodBank = await service.findName(req.body.bloodBank);
-  if (bloodBank) {
-    const user = await service.userId(req.data);
-    if (user.status == "active") {
-      if (user.role == "user") {
-        const requestData = await service.sendRequest({
-          blood_group: req.body.blood_group,
-          action: req.body.action,
-          required_date: req.body.required_date,
-          donation_date: req.body.donation_date,
-          blood_unit: req.body.blood_unit,
-          status: "pending",
-          created_by: user.user.username,
-        });
-        return success(
-          res,
-          requestData,
-          "your request for blood created successfully",
-          201
-        );
-      } else {
-        return error(res, "permission denied", "error", 403);
-      }
-    } else {
-      return error(res,"Please login to request for blood","Please login","403");
-    }
-  } else {
-    return error(res, "Blood Bank not exist","error!",403);
+  try {
+    const userId = req.data;
+    const bloodBankName = req.body.bloodBank;
+    const userToken = await service.userId(userId);
+    const chooseBloodBank = await bloodBankservice.findName(bloodBankName);
+     const requestData = await service.sendRequest({
+       blood_group: req.body.blood_group,
+       action: req.body.action,
+       required_date: req.body.required_date,
+       donation_date: req.body.donation_date,
+       blood_unit: req.body.blood_unit,
+       status: "pending",
+       created_by:userToken.username,
+       bloodBank:req.body.bloodBank,
+       UserId :userToken.id,
+       bloodbankId:chooseBloodBank.id 
+     }); 
+     return success(res,requestData,"request generated successfully",200);
+  } catch (err) {
+    console.log(err);
   }
 };
+
+//function to cancel request
+const cancelRequest = async (req, res) => {
+  try {
+    const userId = req.data;
+    const requestId = req.body.id;
+    const userToken = await service.userId(userId);
+    const findRequest = await actionService.cancelRequestForBld(requestId);
+    console.log(findRequest);
+    success(res,findRequest, "Request cancelled successfully", 200);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 
 module.exports = {
   postUsers,
@@ -260,4 +269,5 @@ module.exports = {
   AcceptedRequests,
   declineRegister,
   sendRequests,
+  cancelRequest
 };
