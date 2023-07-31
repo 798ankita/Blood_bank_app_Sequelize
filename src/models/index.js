@@ -21,7 +21,7 @@ if (config.use_env_variable) {
   db.sequelize = sequelize;
   db.user = require("./user")(sequelize,DataTypes);
   db.action = require("./action")(sequelize,DataTypes);
-  db.bloodbank = require("./bloodBanks")(sequelize,DataTypes);
+  db.bloodBank = require("./bloodBanks")(sequelize,DataTypes);
   db.sequelize.sync();
   console.log("All models were synchronized successfully.");
  
