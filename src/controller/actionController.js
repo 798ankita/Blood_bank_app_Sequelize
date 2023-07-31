@@ -1,4 +1,3 @@
-const bloodBankService = require("../services/bloodBank");
 const userService = require("../services/user_service");
 const actionService = require("../services/action");
 const { success, error } = require("../utils/user_utils");
@@ -10,9 +9,9 @@ exports.getAllBloodRequests = async (req, res) => {
         const userData = req.data;
         const userToken = await userService.userId(userData);
         const data = await actionService.allRequests({});
-        success(res, data, "All users data", 200);  
-    }   catch (err) {
+        return success(res, data, "All requests for blood", 200);  
+    }catch (err) {
         console.log(err); 
-    }
-    
+        return error(res,"error","Internal server error",500);
+    }  
   };
