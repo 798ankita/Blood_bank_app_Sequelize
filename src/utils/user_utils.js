@@ -74,7 +74,7 @@ const jwtLogin = async (data) => {
   // console.log("my Data "+userId.id);
   // console.log(userId);
   if (userId){
-    return jwt.sign({id:userId.id, username:userId.username},process.env.JWT_SECRET_KEY, { expiresIn: "900s" });
+    return jwt.sign({id:userId.id, username:userId.username},process.env.JWT_SECRET_KEY, { expiresIn: "2000s" });
    
   }
   else{
