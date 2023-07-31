@@ -10,3 +10,5 @@ exports.allBloodBankDetail = bloodBankCtrl.allBloodBanks;
 
 //route to see all blood requests created by user
 exports.allRequestsForBlood = actionCtrl.getAllBloodRequests;
+
+
