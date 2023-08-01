@@ -28,17 +28,18 @@ exports.findId = async (id) => {
     }
   };
 
-/*@Params:usersData
-  @Description:function to get all requests data
+/*@Params:id,data
+  @Description:function to get all requests data by bloodbank id
 */
-exports.findRequests = async (data) => {
+exports.findRequests = async (id,data) => {
   try {
-    const users = await action.findAll({});
+    const users = await action.findAll({where:{bloodbankId:id}});
     return users;
   } catch (err) {
     throw err;
   }
 };
+
 
 /*@Params:username
   @Description:function to accept blood requests created by user.
