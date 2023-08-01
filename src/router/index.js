@@ -53,6 +53,9 @@ router.get("/BloodBank/allBloodRequests",userMiddleware.verifyToken,bloodBank.al
 //route to accept blood requests created by user.
 router.put("/bloodBank/acceptBloodRequests",userMiddleware.verifyToken,bloodBank.acceptBloodRequests);
 
+//route to add blood inventory details.
+router.post("/bloodBank/InventoryDetail",userMiddleware.verifyToken,bloodBank.addBloodInventory);
+
 /*********************************SuperUser_Routes *******************************/
 
 //route to login a super_user
