@@ -16,28 +16,28 @@ module.exports = (sequelize, DataTypes) => {
   bloodInventory.init(
     {
       AB_positive: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       A_positive: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       B_positive: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       O_positive: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       AB_negative: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       A_negative: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       B_negative: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       O_negative: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER
       },
       created_by: {
         type: DataTypes.STRING,
@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "bloodInventory",
-      tableName: "bloodInventory",
+      tableName: "blood_inventory",
       paranoid: true,
       timestamps: true,
     }
