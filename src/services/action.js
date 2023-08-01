@@ -31,7 +31,7 @@ exports.findId = async (id) => {
 /*@Params:usersData
   @Description:function to get all requests data
 */
-exports.allRequests = async (data) => {
+exports.findRequests = async (data) => {
   try {
     const users = await action.findAll({});
     return users;
@@ -43,11 +43,11 @@ exports.allRequests = async (data) => {
 /*@Params:username
   @Description:function to accept blood requests created by user.
  */
-  exports.acceptBloodRequest =  async (username) =>
+  exports.acceptBloodRequest =  async (id) =>
   {
     try {
-      const acceptRequest = await action.update({status:"accepted"},
-      {where:{ username : username }});
+      const acceptRequest = await action.update({status:"approved"},
+      {where:{id : id}});
       return acceptRequest ;
     } catch (err) {
       console.log(err);
