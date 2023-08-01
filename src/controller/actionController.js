@@ -8,15 +8,11 @@ exports.getAllBloodRequests = async (req, res) => {
     try {
         const data = await userService.userId(req.data);
         const requestData = await actionService.findRequests(data.id);
-        if (data.role == "blood_bank" && data.id == requestData.bloodbankId) 
-        {
-        const data = await actionService.allRequests({});
-        return success(res, data, "All requests for blood", 200);  
-        }
-        else{
-        return error(res,"no data","Requests not available",404)
-        }
-        
+        if(requestData.length > 0){
+          return success(res,requestData,"All requests for blood",200);
+        }else{
+          return success(res," ","requests not avalable",200);
+        }    
     }catch (err) {
         console.log(err); 
         return error(res,"error","Internal server error",500);
