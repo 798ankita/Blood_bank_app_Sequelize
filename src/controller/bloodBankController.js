@@ -1,5 +1,6 @@
-const bloodBankService = require("../services/bloodBank");
 const userService = require("../services/user_service");
+const bloodBankService = require("../services/bloodBank");
+const inventoryService = require("../services/bloodInventory");
 const { success, error } = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
 
@@ -45,4 +46,37 @@ exports.allBloodBanks = async (req, res) => {
    
  };
 
- 
+
+//controller to add blood Inventory details.
+exports.bloodInventory = async(req,res) => {
+   try {
+  const userId = req.data;
+  console.log(userId)
+  const userToken = await userService.userId(userId);
+  const allData = await inventoryService.findId(userId);
+  if(userToken.role == "blood_bank" && userToken.status == "active" && allData == null)
+   {
+      const details = await inventoryService.addInventory({
+      AB_positive:req.body.AB_positive,
+      A_positive:req.body.A_positive,
+      B_positive:req.body.B_positive,
+      O_positive:req.body.O_positive,
+      AB_negative:req.body.AB_negative,
+      A_negative:req.body.A_negative,
+      B_negative:req.body.B_negative,
+      O_negative:req.body.O_negative,
+      created_by:userToken.username,
+      updated_by:userToken.username,
+      bloodBankId:userToken.id
+     });
+     return success(res,details, "blood Inventory added successfully", 200);
+   }
+   else{
+      return error(res,"permission denied","already added inventory",400);
+   }
+     
+   }
+   catch(err){
+   console.log(err);
+   }
+};
