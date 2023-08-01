@@ -6,10 +6,17 @@ const data = require("../middleware/userMiddleware");
 //controller to get all request created by users for blood
 exports.getAllBloodRequests = async (req, res) => {
     try {
-        const userData = req.data;
-        const userToken = await userService.userId(userData);
+        const data = await userService.userId(req.data);
+        const requestData = await actionService.findRequests(data.id);
+        if (data.role == "blood_bank" && data.id == requestData.bloodbankId) 
+        {
         const data = await actionService.allRequests({});
         return success(res, data, "All requests for blood", 200);  
+        }
+        else{
+        return error(res,"no data","Requests not available",404)
+        }
+        
     }catch (err) {
         console.log(err); 
         return error(res,"error","Internal server error",500);
@@ -17,24 +24,29 @@ exports.getAllBloodRequests = async (req, res) => {
   };
 
   //Accept Registration Requests from blood_bank by super_user
-const acceptBloodRequest = async (req, res) => {
+exports.acceptBloodRequest = async (req, res) => {
     try {
       const data = await userService.userId(req.data);
-      if (data.role == "blood_bank") {
-        const requestAccept = await actionService.acceptBloodRequest(req.body.username);
+      const requestData = await actionService.findId(req.body.id);
+      if (data.role == "blood_bank" && data.id == requestData.bloodbankId) 
+      {
+      const requestAccept = await actionService.acceptBloodRequest(req.body.id);
         if (requestAccept != null) {
           return success(
             res,
             requestAccept,
             "your request has been approved",
-            200
+            202
           );
         }
-        return error(res, "error!", "do not have permission!", 400);
-      }
-    } catch (err) {
-      console.log(err);
-      return error(res, "error!", "Internal server error", 500);
+        else{
+          return error(res, "error!", "do not have permission!", 400);
+        }
+    }else{
+      return success(res, " ", "no data found", 204);
     }
-  };
-  
+  }
+  catch (err) {
+    console.log(err);
+    return error(res, "error!", "Internal server error", 500);}
+}
