@@ -14,4 +14,5 @@ exports.allRequestsForBlood = actionCtrl.getAllBloodRequests;
 //route to accept blood requests created by user.
 exports.acceptBloodRequests = actionCtrl.acceptBloodRequest;
 
-
+//route to add blood Inventory by blood bank.
+exports.addBloodInventory = bloodBankCtrl.bloodInventory;
