@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "paymentDetail",
-      tableName: "paymentDetail",
+      tableName: "payment_detail",
       paranoid: true,
       timestamps: true,
     }
