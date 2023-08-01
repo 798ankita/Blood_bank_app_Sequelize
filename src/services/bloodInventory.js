@@ -31,9 +31,9 @@ exports.findId = async(id) => {
 /*@Params:id
   @Description:This function to check blood availability
 */
-exports.findBlood = async(id) => {
+exports.findBlood = async(bloodGroup) => {
     try {
-      const data = await bloodInventory.findAll({ });
+      const data = await bloodInventory.findOne({bloodGroup:bloodGroup});
       return data;
     } 
     catch (err) {

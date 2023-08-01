@@ -1,6 +1,7 @@
 const service = require("../services/user_service");
 const actionService = require("../services/action");
-const bloodBankservice =require("../services/bloodBank");
+const bloodBankservice = require("../services/bloodBank");
+const bloodInventService = require("../services/bloodInventory");
 const bcrypt = require("bcrypt");
 const { success, error } = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
@@ -221,22 +222,30 @@ const declineRegister = async (req, res) => {
 const sendRequests = async (req, res) => {
   try {
     const userId = req.data;
+    const bloodGroup = req.body.blood_group;
     const bloodBankName = req.body.bloodBank;
     const userToken = await service.userId(userId);
     const chooseBloodBank = await bloodBankservice.findName(bloodBankName);
-     const requestData = await service.sendRequest({
-       blood_group: req.body.blood_group,
-       action: req.body.action,
-       required_date: req.body.required_date,
-       donation_date: req.body.donation_date,
-       blood_unit: req.body.blood_unit,
-       status: "pending",
-       created_by:userToken.username,
-       bloodBank:req.body.bloodBank,
-       UserId :userToken.id,
-       bloodbankId:chooseBloodBank.id 
-     }); 
-     return success(res,requestData,"request generated successfully",200);
+    const checkForBlood = await bloodInventService.findBlood(bloodGroup);
+    if(bloodGroup == checkForBlood.value>0)
+    {
+      const requestData = await service.sendRequest({
+        blood_group: req.body.blood_group,
+        action: req.body.action,
+        required_date: req.body.required_date,
+        donation_date: req.body.donation_date,
+        blood_unit: req.body.blood_unit,
+        status: "pending",
+        created_by:userToken.username,
+        bloodBank:req.body.bloodBank,
+        UserId :userToken.id,
+        bloodbankId:chooseBloodBank.id 
+      }); 
+      return success(res,requestData,"request generated successfully",200);
+    }else{
+      return error(res,"not found","requested blood not available",400);
+    }
+     
   } catch (err) {
     console.log(err);
   }
