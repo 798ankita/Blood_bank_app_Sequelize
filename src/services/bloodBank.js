@@ -1,5 +1,4 @@
 const db = require("../models/index");
-const {success,error} = require("../utils/user_utils")
 const bloodBank = db.bloodBank;
 
 /* @Params:id,data
@@ -43,7 +42,7 @@ exports.allBldBankData = async (data) => {
    @Description:This function find bloodbank by name 
 */
 exports.findName= async (name) => {
-  try {
+  try{
     const user = await bloodBank.findOne({ where: {name:name } });
     return user;
   } 
