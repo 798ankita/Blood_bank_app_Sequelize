@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "bloodPricePerUnit",
-      tableName: "bloodPricePerUnit",
+      tableName: "blood_price_per_unit",
       paranoid: true,
       timestamps: true,
     }
