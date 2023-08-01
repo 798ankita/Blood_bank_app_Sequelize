@@ -1,4 +1,4 @@
-const userMiddleware= require("../utils/user_utils");
+const userMiddleware = require("../utils/user_utils");
 const {success,error} = require("../utils/user_utils")
 const jwt = require("jsonwebtoken");
 
