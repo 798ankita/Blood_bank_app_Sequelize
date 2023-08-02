@@ -33,11 +33,11 @@ module.exports = (sequelize, DataTypes) => {
   },
     required_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     donation_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     blood_unit:{
       type: DataTypes.INTEGER,
