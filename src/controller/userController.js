@@ -226,8 +226,9 @@ const sendRequests = async (req, res) => {
     const bloodBankName = req.body.bloodBank;
     const userToken = await service.userId(userId);
     const chooseBloodBank = await bloodBankservice.findName(bloodBankName);
-    const checkForBlood = await bloodInventService.findBlood(bloodGroup);
-    if(bloodGroup == checkForBlood.value>0)
+    const checkForBlood = await bloodInventService.findInventory(chooseBloodBank.id);
+
+    if(checkForBlood[bloodGroup] > 0)
     {
       const requestData = await service.sendRequest({
         blood_group: req.body.blood_group,
@@ -239,7 +240,7 @@ const sendRequests = async (req, res) => {
         created_by:userToken.username,
         bloodBank:req.body.bloodBank,
         UserId :userToken.id,
-        bloodbankId:chooseBloodBank.id 
+        bloodbankId:chooseBloodBank.UserId 
       }); 
       return success(res,requestData,"request generated successfully",200);
     }else{
