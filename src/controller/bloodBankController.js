@@ -1,7 +1,7 @@
 const userService = require("../services/user_service");
 const bloodBankService = require("../services/bloodBank");
 const inventoryService = require("../services/bloodInventory");
-const { success, error } = require("../utils/user_utils");
+const { success, error  } = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
 
 //controller for adding blood bank detail
@@ -18,7 +18,7 @@ if(userToken.role == "blood_bank" && userToken.status == "active" && findId == n
    address:req.body.address,
    description:req.body.description,
    status:"active",
-   created_by:req.body.name,
+   created_by:userToken.username,
    updated_by:userToken.username,
    UserId:userToken.id
    
@@ -34,7 +34,7 @@ return error(res,"Permission denied","do not have permission to add blood bank o
     
 };
 
-//controller to get all bloodbanks
+//controller to get all bloodbanks.
 exports.allBloodBanks = async (req, res) => {
    try {
       const data = await bloodBankService.allBldBankData({});
@@ -51,10 +51,11 @@ exports.allBloodBanks = async (req, res) => {
 exports.bloodInventory = async(req,res) => {
    try {
   const userId = req.data;
-  console.log(userId)
+//   console.log(userId)
   const userToken = await userService.userId(userId);
-  const allData = await inventoryService.findId(userId);
-  if(userToken.role == "blood_bank" && userToken.status == "active" && allData == null)
+  const bloodBankId = await bloodBankService.findId(userToken.id);
+  const allData = await inventoryService.findId(bloodBankId.id);
+  if(bloodBankId.status == "active" && allData == null || allData < 1)
    {
       const details = await inventoryService.addInventory({
       AB_positive:req.body.AB_positive,
@@ -67,16 +68,17 @@ exports.bloodInventory = async(req,res) => {
       O_negative:req.body.O_negative,
       created_by:userToken.username,
       updated_by:userToken.username,
-      bloodBankId:userToken.id
+      bloodBankId:bloodBankId.id
      });
      return success(res,details, "blood Inventory added successfully", 200);
    }
    else{
-      return error(res,"permission denied","already added inventory",400);
+      return error(res,"permission denied","already added inventory",208);
    }
      
    }
    catch(err){
    console.log(err);
+   return error(res,"error","internal server error",500);
    }
 };
