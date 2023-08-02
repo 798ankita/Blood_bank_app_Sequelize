@@ -54,7 +54,16 @@ router.get("/BloodBank/allBloodRequests",userMiddleware.verifyToken,bloodBank.al
 router.put("/bloodBank/acceptBloodRequests",userMiddleware.verifyToken,bloodBank.acceptBloodRequests);
 
 //route to add blood inventory details.
-router.post("/bloodBank/InventoryDetail",userMiddleware.verifyToken,bloodBank.addBloodInventory);
+router.post("/bloodBank/addInventoryDetail",userMiddleware.verifyToken,bloodBank.addBloodInventory);
+
+//route to update blood inventory details.
+router.patch("/bloodBank/updateInventoryDetail",userMiddleware.verifyToken,bloodBank.updateBloodInventory);
+
+//route to add blood price details.
+router.post("/bloodBank/addBloodPrice",userMiddleware.verifyToken,bloodBank.addBloodPrice);
+
+//route to update blood price details.
+router.patch("/bloodBank/updateBloodPrice",userMiddleware.verifyToken,bloodBank.updateBloodPrice);
 
 /*********************************SuperUser_Routes *******************************/
 
