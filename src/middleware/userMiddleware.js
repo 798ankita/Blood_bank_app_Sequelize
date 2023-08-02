@@ -21,7 +21,8 @@ const data = (req, res, next) => {
 /*@params:req,res,next,
   @Request:req.body
   @Response:res.status(400)
-  @Description:middleware to update user data*/
+  @Description:middleware to update user data
+*/
 const updatedUser =(req, res, next) => {
  try {
   user = req.body;
@@ -39,7 +40,8 @@ const updatedUser =(req, res, next) => {
 
 /*@params:req,res,next
   @Request:req.body
-  @Description:login middleware with jwt token*/
+  @Description:login middleware with jwt token
+*/
 const login = async(req, res, next) => {
   const data = req.body;
   const token = await userMiddleware.jwtLogin(data);
@@ -51,7 +53,8 @@ const login = async(req, res, next) => {
 /*@params:req,res,next
   @Request:req.body
   @Response:res.status(403),res.status(401)
-  @description:middleware to verify jwt token*/
+  @description:middleware to verify jwt token
+*/
 const verifyToken =(req, res, next) => {
   const token = req.headers["x-access-token"];
   if (token) {
