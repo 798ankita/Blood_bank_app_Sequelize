@@ -14,7 +14,7 @@ exports.addInventory = async (data) => {
     }
   };
 
-  /*@Params:id
+  /*@Params:bloodBankId
   @Description:This function find existing user's id
 */
 exports.findId = async(bloodBankId) => {
@@ -41,4 +41,20 @@ exports.findInventory= async(id) => {
     }
   };
   
+  /*@Params:id,data
+  @Description:function to update blood Inventory units.
+  */
+exports.updateInventory = async (id,data) => {
+  try {
+    const detail = await bloodInventory.update(data,{
+      where:{
+        id:id 
+      }    
+  });
+    return detail;
+  } 
+   catch (err) {
+   throw err;
+   }
+};
   
