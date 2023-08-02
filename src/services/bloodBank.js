@@ -13,7 +13,7 @@ exports.bloodBankDetail= async (id,data) => {
     }
   };
 
-  /* @Params:id,data
+  /* @Params:UserId
    @Description:This function find bloodbank by id.
 */
 exports.findId = async (UserId) => {
@@ -38,12 +38,12 @@ exports.allBldBankData = async (data) => {
   }
 };
 
-/* @Params:id,data
+/* @Params:username
    @Description:This function find bloodbank by name 
 */
-exports.findName= async (name) => {
+exports.findName= async (username) => {
   try{
-    const user = await bloodBank.findOne({ where: {name:name } });
+    const user = await bloodBank.findOne({ where: { created_by:username } });
     return user;
   } 
   catch (err) {
