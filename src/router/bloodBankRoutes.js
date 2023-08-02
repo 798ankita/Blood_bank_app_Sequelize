@@ -16,3 +16,13 @@ exports.acceptBloodRequests = actionCtrl.acceptBloodRequest;
 
 //route to add blood Inventory by blood bank.
 exports.addBloodInventory = bloodBankCtrl.bloodInventory;
+
+//route to update blood Inventory by blood bank.
+exports.updateBloodInventory = bloodBankCtrl.updatedInventory;
+
+//route to add blood prices by blood bank.
+exports.addBloodPrice = bloodBankCtrl.bloodPrice;
+
+//route to update blood price per unit table .
+exports.updateBloodPrice = bloodBankCtrl.updateBloodPrice;
+
