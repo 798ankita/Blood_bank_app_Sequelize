@@ -17,9 +17,9 @@ exports.addInventory = async (data) => {
   /*@Params:id
   @Description:This function find existing user's id
 */
-exports.findId = async(id) => {
+exports.findId = async(bloodBankId) => {
     try {
-      const data = await bloodInventory.findOne({ where: {id:id} });
+      const data = await bloodInventory.findOne({ where: {bloodBankId:bloodBankId} });
       return data;
     } 
   
@@ -31,13 +31,13 @@ exports.findId = async(id) => {
 /*@Params:id
   @Description:This function to check blood availability
 */
-exports.findBlood = async(bloodGroup) => {
+exports.findInventory= async(id) => {
     try {
-      const data = await bloodInventory.findOne({bloodGroup:bloodGroup});
+      const data = await bloodInventory.findOne({where:{id:id}});
       return data;
     } 
     catch (err) {
-    throw err;
+  throw err;
     }
   };
   
