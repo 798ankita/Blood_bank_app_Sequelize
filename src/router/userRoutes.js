@@ -19,8 +19,11 @@ exports.routeLoginUser = userCtrl.loginUser;
 //route to update a user
 exports.routeUpdateUser = userCtrl.updatedUser;
 
-//route to send request for blood
-exports.routeSendBloodRequest = userCtrl.sendRequests;
+//route to send request for blood by patient
+exports.SendBloodRequestPatient = userCtrl.patientSendRequests;
+
+//route to send request to donate blood by donor
+exports.SendBloodRequestdonor = userCtrl.donorSendRequest;
 
 //route to cancel  the request for blood.
 exports.routeCancelBloodRequest = userCtrl.cancelRequest;
