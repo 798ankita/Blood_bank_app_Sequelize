@@ -30,8 +30,11 @@ router.put("/updateUser",userMiddleware.verifyToken,userMiddleware.updatedUser,u
 //route to see list of all blood banks.
 router.get("/allBloodBanksList",bloodBank.allBloodBankDetail);
 
-//route to create requests for blood by user
-router.post("/user/sendBloodRequest",userMiddleware.verifyToken,userRoutes.routeSendBloodRequest);
+//route to create requests for blood by  patient user
+router.post("/user/patient/sendBloodRequest",userMiddleware.verifyToken,userRoutes.SendBloodRequestPatient);
+
+//route to send request to donate blood by donor user
+router.post("/user/donor/sendRequest",userMiddleware.verifyToken,userRoutes.SendBloodRequestdonor);
 
 //route to cancel the request for blood.
 router.patch("/user/cancelBloodRequest",userMiddleware.verifyToken,userRoutes.routeCancelBloodRequest);
