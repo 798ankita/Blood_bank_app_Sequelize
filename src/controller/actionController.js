@@ -1,5 +1,7 @@
 const userService = require("../services/user_service");
 const actionService = require("../services/action");
+const inventoryServices = require("../services/bloodInventory");
+const bloodBankService = require("../services/bloodBank");
 const { success, error } = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
 
@@ -19,38 +21,36 @@ exports.getAllBloodRequests = async (req, res) => {
     }  
   };
 
-  //Accept blood requests by blood bank of patient
+//Accept blood requests by blood bank of patient
 exports.acceptBloodRequest = async (req, res) => {
     try {
       const data = await userService.userId(req.data);
-      const requestData = await actionService.findId(req.body.id);
-      if (data.role == "blood_bank" && data.id == requestData.bloodbankId && requestData.action == "patient") 
+      const bloodBank = await bloodBankService.findId(data.id);
+      const requestData = await actionService.findBloodBankId(bloodBank.id);
+      if (requestData.status == "pending" && data.role == "blood_bank" && requestData.action == "patient" && bloodBank.id == requestData.bloodbankId) 
       {
-      const requestAccept = await actionService.acceptBloodRequest(req.body.id,
+        const requestAccept = await actionService.acceptBloodRequest(req.body.id,
         {updated_by:data.username});
-        if (requestAccept != null) {
-          return success(
-            res,
-            requestAccept,
-            "your request has been approved, Please complete the payment",
-            202
-          );
-        }
-        else{
-          return error(res, "error!", "do not have permission!", 400);
-        }
-    }else if(data.role == "blood_bank" && data.id == requestData.bloodbankId && requestData.action == "donor")
+        const bloodBankId = requestData.bloodbankId;
+        const reqBloodGroup = requestData.blood_group;
+        const inventory = await inventoryServices.findId(bloodBankId);
+        const inventoryBloodGroup = await inventoryServices.findBlood(reqBloodGroup); 
+        const decrementData = await inventoryServices.updateAutoInventory({
+
+        })
+
+        return success(res,requestAccept,"your request has been approved, Please complete the payment",202);
+        
+    }else if(requestData.status == "pending" && data.role == "blood_bank" && requestData.action == "donor" && bloodBank.id == requestData.bloodBankId)
     {
       const requestAccept = await actionService.acceptBloodRequest(req.body.id,
-        {updated_by:data.username});
-        if (requestAccept != null) {
+        {updated_by:data.username})
           return success(
             res,
             requestAccept,
             "request approved, scheduled blood donation date: 9/3/2023",
             202
           );
-        }
 
     }
     else{

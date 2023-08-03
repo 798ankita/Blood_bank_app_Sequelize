@@ -238,26 +238,22 @@ const patientSendRequests = async (req, res) => {
         blood_unit: req.body.blood_unit,
         status: "pending",
         created_by:userToken.username,
-        created_by:userToken.username,
         bloodBank:req.body.bloodBank,
         UserId :userToken.id,
-        bloodbankId:chooseBloodBank.UserId 
+        bloodbankId:chooseBloodBank.id 
       }
       );
-    const actionId = await actionService.findId(userToken.id)
-     const paymentDetail = await paymentService.paymentBill({
+      const actionId = await actionService.findUserId(userId)
+      const paymentDetail = await paymentService.paymentBill({
       status:"pending",
       created_by:req.body.bloodBank,
       updated_by:req.body.bloodBank,
-      bloodBankId:chooseBloodBank.UserId,
+      bloodBankId:chooseBloodBank.id,
       UserId:userToken.id,
       userActionId:actionId.id 
     });
-  
-    
     return success(res,requestData,"request generated successfully",200);
-    }
-    else{
+    }else{
       return error(res,"not found","requested blood not available",400);
     }
     
@@ -283,7 +279,7 @@ const donorSendRequest = async (req, res) => {
         created_by:userToken.username,
         updated_by:userToken.username,
         bloodBank:req.body.bloodBank,
-        UserId :userToken.id,
+        UserId :userId,
         bloodbankId:chooseBloodBank.UserId 
       }); 
       return success(res,requestData,"request generated successfully",200);
