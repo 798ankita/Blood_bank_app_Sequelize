@@ -58,3 +58,30 @@ exports.updateInventory = async (id,data) => {
    }
 };
   
+
+/*@Params:id,data
+  @Description:function to update blood Inventory units automaticaly.
+  */
+  exports.updateAutoInventory = async (id,data) => {
+    try {
+      const detail = await bloodInventory.update(data,{
+        where:{
+          id:id 
+        }    
+    });
+      return detail;
+    } 
+     catch (err) {
+     throw err;
+     }
+  };
+
+  exports.findBlood = async (reqBlood) => {
+    try {
+      const blood = await bloodInventory.findone(reqBlood);
+      return blood;
+    } 
+    catch (err) {
+    console.log(err);
+     }
+    }
