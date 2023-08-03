@@ -19,27 +19,42 @@ exports.getAllBloodRequests = async (req, res) => {
     }  
   };
 
-  //Accept Registration Requests from blood_bank by super_user
+  //Accept blood requests by blood bank of patient
 exports.acceptBloodRequest = async (req, res) => {
     try {
       const data = await userService.userId(req.data);
       const requestData = await actionService.findId(req.body.id);
-      if (data.role == "blood_bank" && data.id == requestData.bloodbankId) 
+      if (data.role == "blood_bank" && data.id == requestData.bloodbankId && requestData.action == "patient") 
       {
-      const requestAccept = await actionService.acceptBloodRequest(req.body.id);
+      const requestAccept = await actionService.acceptBloodRequest(req.body.id,
+        {updated_by:data.username});
         if (requestAccept != null) {
           return success(
             res,
             requestAccept,
-            "your request has been approved",
+            "your request has been approved, Please complete the payment",
             202
           );
         }
         else{
           return error(res, "error!", "do not have permission!", 400);
         }
-    }else{
-      return success(res, " ", "no data found", 204);
+    }else if(data.role == "blood_bank" && data.id == requestData.bloodbankId && requestData.action == "donor")
+    {
+      const requestAccept = await actionService.acceptBloodRequest(req.body.id,
+        {updated_by:data.username});
+        if (requestAccept != null) {
+          return success(
+            res,
+            requestAccept,
+            "request approved, scheduled blood donation date: 9/3/2023",
+            202
+          );
+        }
+
+    }
+    else{
+      return success(res," ","no data found", 204);
     }
   }
   catch (err) {
