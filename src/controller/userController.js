@@ -2,6 +2,7 @@ const service = require("../services/user_service");
 const actionService = require("../services/action");
 const bloodBankservice = require("../services/bloodBank");
 const bloodInventService = require("../services/bloodInventory");
+const paymentService = require("../services/paymentDetail");
 const bcrypt = require("bcrypt");
 const { success, error } = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
@@ -218,8 +219,8 @@ const declineRegister = async (req, res) => {
   }
 };
 
-//controller to create requests for blood by user.
-const sendRequests = async (req, res) => {
+//controller to create requests for blood by patient user .
+const patientSendRequests = async (req, res) => {
   try {
     const userId = req.data;
     const bloodGroup = req.body.blood_group;
@@ -232,34 +233,75 @@ const sendRequests = async (req, res) => {
     {
       const requestData = await service.sendRequest({
         blood_group: req.body.blood_group,
-        action: req.body.action,
+        action:"patient",
         required_date: req.body.required_date,
-        donation_date: req.body.donation_date,
         blood_unit: req.body.blood_unit,
         status: "pending",
+        created_by:userToken.username,
         created_by:userToken.username,
         bloodBank:req.body.bloodBank,
         UserId :userToken.id,
         bloodbankId:chooseBloodBank.UserId 
-      }); 
-      return success(res,requestData,"request generated successfully",200);
-    }else{
+      }
+      );
+    const actionId = await actionService.findId(userToken.id)
+     const paymentDetail = await paymentService.paymentBill({
+      status:"pending",
+      created_by:req.body.bloodBank,
+      updated_by:req.body.bloodBank,
+      bloodBankId:chooseBloodBank.UserId,
+      UserId:userToken.id,
+      userActionId:actionId.id 
+    });
+  
+    
+    return success(res,requestData,"request generated successfully",200);
+    }
+    else{
       return error(res,"not found","requested blood not available",400);
     }
-     
+    
+    
   } catch (err) {
     console.log(err);
   }
 };
 
+//controller to create requests to donate blood by donor user .
+const donorSendRequest = async (req, res) => {
+  try {
+    const userId = req.data;
+    const bloodBankName = req.body.bloodBank;
+    const userToken = await service.userId(userId);
+    const chooseBloodBank = await bloodBankservice.findName(bloodBankName);
+      const requestData = await service.sendRequest({
+        blood_group:userToken.blood_group,
+        action:"donor",
+        blood_unit:"1",
+        status: "pending",
+        donation_date:req.body.donation_date,
+        created_by:userToken.username,
+        updated_by:userToken.username,
+        bloodBank:req.body.bloodBank,
+        UserId :userToken.id,
+        bloodbankId:chooseBloodBank.UserId 
+      }); 
+      return success(res,requestData,"request generated successfully",200);
+    
+     
+  } catch (err) {
+    console.log(err);
+  }
+};
 //function to cancel request
 const cancelRequest = async (req, res) => {
   try {
     const userId = req.data;
     const requestId = req.body.id;
     const userToken = await service.userId(userId);
-    const findRequest = await actionService.cancelRequestForBld(requestId);
-    console.log(findRequest);
+    const findRequest = await actionService.cancelRequestForBld(requestId,{
+      updated_by:userToken.username
+    });
     success(res,findRequest, "Request cancelled successfully", 200);
   } catch (err) {
     console.log(err);
@@ -278,6 +320,7 @@ module.exports = {
   pendingRegister,
   AcceptedRequests,
   declineRegister,
-  sendRequests,
-  cancelRequest
+  patientSendRequests,
+  cancelRequest,
+  donorSendRequest
 };
