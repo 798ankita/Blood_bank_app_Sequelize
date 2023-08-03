@@ -15,7 +15,7 @@ const action = db.action;
     }
   };
 
- /* @Params:id,data
+ /* @Params:id
    @Description:This function find request by id.
 */
 exports.findId = async (id) => {
