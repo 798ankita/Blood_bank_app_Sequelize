@@ -28,6 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       payment_mode: {
         type: DataTypes.STRING,
       },
+      status:{
+        type:DataTypes.ENUM("pending","approved","rejected")
+      },
       created_by: {
         type: DataTypes.STRING,
       },
