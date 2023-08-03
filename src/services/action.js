@@ -16,17 +16,30 @@ const action = db.action;
   };
 
  /* @Params:id
-   @Description:This function find request by id.
+   @Description:This function find request by bloodbankid
 */
-exports.findId = async (id) => {
+exports.findBloodBankId = async (id) => {
     try {
-      const requestId = await action.findOne({ where: {id:id } });
+      const requestId = await action.findOne({ where: {bloodbankId:id} });
       return requestId;
     } 
     catch (err) {
     throw err;
     }
   };
+
+  /* @Params:id
+   @Description:This function find request by userid.
+*/
+exports.findUserId = async (id) => {
+  try {
+    const requestId = await action.findOne({ where: {UserId:id} });
+    return requestId;
+  } 
+  catch (err) {
+  throw err;
+  }
+};
 
 /*@Params:id,data
   @Description:function to get all requests data by bloodbank id
