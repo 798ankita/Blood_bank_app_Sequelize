@@ -18,9 +18,9 @@ const action = db.action;
  /* @Params:id
    @Description:This function find request by bloodbankid
 */
-exports.findBloodBankId = async (id) => {
+exports.findRequestId = async (id) => {
     try {
-      const requestId = await action.findOne({ where: {bloodbankId:id} });
+      const requestId = await action.findOne({ where: {id:id} });
       return requestId;
     } 
     catch (err) {
@@ -33,7 +33,7 @@ exports.findBloodBankId = async (id) => {
 */
 exports.findUserId = async (id) => {
   try {
-    const requestId = await action.findOne({ where: {UserId:id} });
+    const requestId = await action.findOne({ where: {id:id} });
     return requestId;
   } 
   catch (err) {
