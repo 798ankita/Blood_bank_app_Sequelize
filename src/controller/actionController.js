@@ -23,25 +23,29 @@ exports.getAllBloodRequests = async (req, res) => {
 
 //Accept blood requests by blood bank of patient
 exports.acceptBloodRequest = async (req, res) => {
+
     try {
       const data = await userService.userId(req.data);
       const bloodBank = await bloodBankService.findId(data.id);
-      const requestData = await actionService.findBloodBankId(bloodBank.id);
-      if (requestData.status == "pending" && data.role == "blood_bank" && requestData.action == "patient" && bloodBank.id == requestData.bloodbankId) 
+      const requestData = await actionService.findRequestId(req.body.id);
+  
+      if (requestData != null && requestData.status == "pending" && data.role == "blood_bank" && requestData.action == "patient" && bloodBank.id == requestData.bloodbankId) 
       {
-        const requestAccept = await actionService.acceptBloodRequest(req.body.id,
-        {updated_by:data.username});
-        const bloodBankId = requestData.bloodbankId;
+        const requestAccept = await actionService.acceptBloodRequest(req.body.id, {updated_by:data.username});
+        const bloodBankId = requestData.bloodbankId
         const reqBloodGroup = requestData.blood_group;
+        const reqBloodUnits = requestData.blood_unit;
         const inventory = await inventoryServices.findId(bloodBankId);
-        const inventoryBloodGroup = await inventoryServices.findBlood(reqBloodGroup); 
-        const decrementData = await inventoryServices.updateAutoInventory({
+        const inventoryBlood = inventory[reqBloodGroup];
+        const totalBloodUnit = inventoryBlood - reqBloodUnits;
+        const mydata = {}
+        mydata[requestData.blood_group] = totalBloodUnit;
+        const decrementData = await inventoryServices.updateAutoInventory(bloodBank.id, mydata);
 
-        })
-
-        return success(res,requestAccept,"your request has been approved, Please complete the payment",202);
+        return success(res,decrementData,"your request has been approved, Please complete the payment",202);
         
-    }else if(requestData.status == "pending" && data.role == "blood_bank" && requestData.action == "donor" && bloodBank.id == requestData.bloodBankId)
+    }
+    else if(requestData.status == "pending" && data.role == "blood_bank" && requestData.action == "donor" && bloodBank.id == requestData.bloodbankId)
     {
       const requestAccept = await actionService.acceptBloodRequest(req.body.id,
         {updated_by:data.username})
