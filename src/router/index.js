@@ -54,7 +54,7 @@ router.post("/addBloodBankDetails",userMiddleware.verifyToken,bloodBank.createBl
 router.get("/BloodBank/allBloodRequests",userMiddleware.verifyToken,bloodBank.allRequestsForBlood);
 
 //route to accept blood requests created by user.
-router.put("/bloodBank/acceptBloodRequests",userMiddleware.verifyToken,bloodBank.acceptBloodRequests);
+router.patch("/bloodBank/acceptBloodRequests",userMiddleware.verifyToken,bloodBank.acceptBloodRequests);
 
 //route to add blood inventory details.
 router.post("/bloodBank/addInventoryDetail",userMiddleware.verifyToken,bloodBank.addBloodInventory);
