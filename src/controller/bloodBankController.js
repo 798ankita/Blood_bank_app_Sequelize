@@ -4,6 +4,7 @@ const inventoryService = require("../services/bloodInventory");
 const bloodPriceService = require("../services/bloodPrice");
 const { success, error  } = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
+const { bloodInventory } = require("../models");
 
 //controller for adding blood bank detail
  exports.bldBankDetails = async(req,res) => {
@@ -57,7 +58,7 @@ exports.bloodInventory = async(req,res) => {
   const allData = await inventoryService.findId(bloodBankId.id);
   if(userToken.role == "blood_bank" && bloodBankId.status == "active" && allData == null || allData < 1)
    {
-      const details = await bloodPriceService.addBloodPrice({
+      const details = await inventoryService.addInventory({
       AB_positive:req.body.AB_positive,
       A_positive:req.body.A_positive,
       B_positive:req.body.B_positive,
