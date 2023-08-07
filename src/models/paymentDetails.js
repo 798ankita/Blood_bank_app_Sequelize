@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       status:{
-        type:DataTypes.ENUM("pending","approved","rejected")
+        type:DataTypes.ENUM("pending","payment complete","payment failed")
       },
       created_by: {
         type: DataTypes.STRING,
