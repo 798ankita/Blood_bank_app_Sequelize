@@ -243,15 +243,18 @@ const patientSendRequests = async (req, res) => {
         bloodbankId:chooseBloodBank.id 
       }
       );
-      const actionId = await actionService.findUserId(userId)
+      if(requestData){
+      // const actionId = await actionService.findUserId(userId)
       const paymentDetail = await paymentService.paymentBill({
       status:"pending",
       created_by:req.body.bloodBank,
       updated_by:req.body.bloodBank,
       bloodBankId:chooseBloodBank.id,
       UserId:userToken.id,
-      userActionId:actionId.id 
+      userActionId:requestData.id
     });
+    }
+      
     return success(res,requestData,"request generated successfully",200);
     }else{
       return error(res,"not found","requested blood not available",400);
