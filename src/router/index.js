@@ -71,6 +71,9 @@ router.post("/bloodBank/addBloodPrice",userMiddleware.verifyToken,bloodBank.addB
 //route to update blood price details.
 router.patch("/bloodBank/updateBloodPrice",userMiddleware.verifyToken,bloodBank.updateBloodPrice);
 
+//route to increment in blood unit while collecting blood
+router.patch("/bloodBank/bloodCollected",userMiddleware.verifyToken,bloodBank.IncrementBlood);
+
 /*********************************SuperUser_Routes *******************************/
 
 //route to login a super_user

@@ -26,3 +26,6 @@ exports.addBloodPrice = bloodBankCtrl.bloodPrice;
 //route to update blood price per unit table .
 exports.updateBloodPrice = bloodBankCtrl.updateBloodPrice;
 
+//route to update blood unit while collecting blood.
+exports.IncrementBlood = actionCtrl.bloodCollected;
+
