@@ -2,6 +2,8 @@ const userService = require("../services/user_service");
 const actionService = require("../services/action");
 const inventoryServices = require("../services/bloodInventory");
 const bloodBankService = require("../services/bloodBank");
+const paymentService = require("../services/paymentDetail");
+const bloodPriceService = require("../services/bloodPrice");
 const { success, error } = require("../utils/user_utils");
 const data = require("../middleware/userMiddleware");
 
@@ -32,18 +34,19 @@ exports.acceptBloodRequest = async (req, res) => {
       if (requestData != null && requestData.status == "pending" && data.role == "blood_bank" && requestData.action == "patient" && bloodBank.id == requestData.bloodbankId) 
       {
         const requestAccept = await actionService.acceptBloodRequest(req.body.id, {updated_by:data.username});
-        const bloodBankId = requestData.bloodbankId
-        const reqBloodGroup = requestData.blood_group;
-        const reqBloodUnits = requestData.blood_unit;
-        const inventory = await inventoryServices.findId(bloodBankId);
-        const inventoryBlood = inventory[reqBloodGroup];
-        const totalBloodUnit = inventoryBlood - reqBloodUnits;
-        const mydata = {}
-        mydata[requestData.blood_group] = totalBloodUnit;
-        const decrementData = await inventoryServices.updateAutoInventory(bloodBank.id, mydata);
-
-        return success(res,decrementData,"your request has been approved, Please complete the payment",202);
-        
+    if(requestAccept){
+    const bloodBankId = requestData.bloodbankId
+    const reqBloodGroup = requestData.blood_group;
+    const reqBloodUnits = requestData.blood_unit;
+    const inventory = await inventoryServices.findId(bloodBankId);
+    const inventoryBlood = inventory[reqBloodGroup];
+    const totalBloodUnit = inventoryBlood - reqBloodUnits;
+    const mydata = {}
+    mydata[requestData.blood_group] = totalBloodUnit;
+    const decrementData = await inventoryServices.updateAutoInventory(bloodBank.id, mydata);
+    return success(res,decrementData,"your request has been approved, Please complete the payment",202);
+  }
+ 
     }
     else if(requestData.status == "pending" && data.role == "blood_bank" && requestData.action == "donor" && bloodBank.id == requestData.bloodbankId)
     {
@@ -64,4 +67,32 @@ exports.acceptBloodRequest = async (req, res) => {
   catch (err) {
     console.log(err);
     return error(res, "error!", "Internal server error", 500);}
+}
+
+
+//generate bill and send to user
+exports.generateBill = async (req,res) =>{
+ try {
+  const userData = await userService.userId(req.data);
+  const requestData = await actionService.findRequestId(req.body.id);
+  const reqBloodGroup = requestData.blood_group;
+  const reqBloodUnits = requestData.blood_unit;
+  const bloodPrice = await bloodPriceService.findId(requestData.bloodbankId);
+  const priceTableBlood = bloodPrice[reqBloodGroup];
+  const totalAmount = priceTableBlood * reqBloodUnits;
+  
+  if(userData.role == "user" && requestData.status == "pending" && requestData.bloodbankId == bloodPrice.bloodBankId){
+    const checkPaymentId = await paymentService.findReqId(requestData.id);
+    const updateBillAmount = await paymentService.updateAmount(requestData.id,totalAmount)
+  return success(res,updateBillAmount,"payment complete",200);
+  }else{
+    return error(res,"permission denied","request can not be completed",400);
+  }
+  
+  
+ } catch (err) {
+  console.log(err);
+ } 
+  
+
 }

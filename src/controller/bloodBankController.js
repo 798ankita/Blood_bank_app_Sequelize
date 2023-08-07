@@ -89,7 +89,7 @@ exports.bloodPrice = async(req,res) => {
    try {
   const userId = req.data;
   const userToken = await userService.userId(userId);
-  const bloodBankId = await bloodBankService.findId(userToken.id);
+  const bloodBankId = await bloodBankService.findId(userId);
   const inventoryData = await inventoryService.findId(bloodBankId.id);
   const priceData = await bloodPriceService.findId(bloodBankId.id);
   if(userToken.role == "blood_bank" && bloodBankId.status == "active" && inventoryData != null && priceData == null)
