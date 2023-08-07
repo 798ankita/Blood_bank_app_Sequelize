@@ -1,11 +1,12 @@
 # Welcome to Blood_bank_app
 
-# Description:This project has blood bank management based api's.
+## Description:
+This project has blood bank management based api's.
 
-# Homepage
+## Homepage
 server.js
 
-# Dependencies
+## Dependencies
 express
 mysql2
 sequelize
@@ -13,15 +14,15 @@ bcrypt
 dotenv
 jsonwebtoken
 
-# devDependencies
+## devDependencies
 sequelize-cli
 nodemon
 
-# Run project
+## Run project
 npm run dev
 
-# bcrypt for password encryption
+## bcrypt for password encryption
 npm i bcrypt
 
-# Joi validations and Jsonwebtoken verification
+## Joi validations and Jsonwebtoken verification
 npm i joi and npm i jsonwebtoken
