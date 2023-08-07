@@ -54,7 +54,7 @@ exports.findRequests = async (id,data) => {
 };
 
 
-/*@Params:username
+/*@Params:id
   @Description:function to accept blood requests created by user.
  */
   exports.acceptBloodRequest =  async (id) =>

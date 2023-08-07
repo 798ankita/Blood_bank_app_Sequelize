@@ -27,7 +27,7 @@ exports.findId = async(bloodBankId) => {
     }
   };
 
-  /*@Params:id,data
+  /*@Params:bloodBankId,data
   @Description:function to update blood price details.
   */
 exports.updatePriceDetails = async (bloodBankId,data) => {

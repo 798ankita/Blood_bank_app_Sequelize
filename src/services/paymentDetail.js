@@ -39,6 +39,6 @@ exports.findReqId = async (id) => {
     return requestId;
   } 
   catch (err) {
-  throw err;
+  console.log(err);
   }
 };
