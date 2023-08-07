@@ -1,37 +1,27 @@
-<h1 align="center">Welcome to Blood_bank_app 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="#" target="_blank">
-    <img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-yellow.svg" />
-  </a>
-</p>
+# Welcome to Blood_bank_app
 
-> this project has blood bank management based api's
+# Description:This project has blood bank management based api's.
 
-### 🏠 [Homepage](server.js)
+# Homepage
+server.js
 
-### ✨ [Demo](npmrun dev)
+# Dependencies
+express
+mysql2
+sequelize
+bcrypt
+dotenv
+jsonwebtoken
 
-## Install
+# devDependencies
+sequelize-cli
+nodemon
 
-```sh
-npm i express
-```
-
-## Run tests
-
-```sh
+# Run project
 npm run dev
-```
 
-## Author
+# bcrypt for password encryption
+npm i bcrypt
 
-👤 **Ankita**
-
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+# Joi validations and Jsonwebtoken verification
+npm i joi and npm i jsonwebtoken
