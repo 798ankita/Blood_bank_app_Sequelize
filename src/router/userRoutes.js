@@ -8,7 +8,7 @@ exports.routeAllUsers = userCtrl.getUsers;
 exports.routeRegisterUsers = userCtrl.postUsers;
 
 //route to get one user
-exports.routeOneUser= userCtrl.getUser;
+exports.routeOneUser = userCtrl.getUser;
 
 //route to delete a user
 exports.routeDeleteUser = userCtrl.deleteUser;
@@ -44,5 +44,3 @@ exports.AcceptRequest = userCtrl.AcceptedRequests;
 
 //route to decline requests for registrations from blood banks.
 exports.declineRequests = userCtrl.declineRegister;
-
-
