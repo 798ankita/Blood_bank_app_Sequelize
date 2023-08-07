@@ -39,6 +39,9 @@ router.post("/user/donor/sendRequest",userMiddleware.verifyToken,userRoutes.Send
 //route to cancel the request for blood.
 router.patch("/user/cancelBloodRequest",userMiddleware.verifyToken,userRoutes.routeCancelBloodRequest);
 
+//route to complete payment by user
+router.patch("/user/completePayment",userMiddleware.verifyToken,userRoutes.completePayment);
+
 /*********************************blood_bank_Routes******************************/
 
 //route to create blood_bank

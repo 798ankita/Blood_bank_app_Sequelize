@@ -1,5 +1,5 @@
 const userCtrl = require("../controller/userController");
-
+const actionCtrl = require("../controller/actionController");
 /***********************************Users************************************/
 //route getting all existing users
 exports.routeAllUsers = userCtrl.getUsers;
@@ -30,6 +30,9 @@ exports.routeCancelBloodRequest = userCtrl.cancelRequest;
 
 //route to logout a user
 exports.routelogoutUser = userCtrl.logoutUser;
+
+//route to complete the payment
+exports.completePayment = actionCtrl.generateBill;
 
 /******************************superUser routes*******************************************/
 
