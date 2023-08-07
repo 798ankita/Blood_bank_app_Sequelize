@@ -283,7 +283,7 @@ const donorSendRequest = async (req, res) => {
         updated_by:userToken.username,
         bloodBank:req.body.bloodBank,
         UserId :userId,
-        bloodbankId:chooseBloodBank.UserId 
+        bloodbankId:chooseBloodBank.id 
       }); 
       return success(res,requestData,"request generated successfully",200);
     
