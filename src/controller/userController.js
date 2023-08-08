@@ -6,6 +6,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable linebreak-style */
 const bcrypt = require('bcrypt');
+const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const service = require('../services/user_service');
 const actionService = require('../services/action');
@@ -13,65 +14,125 @@ const bloodBankservice = require('../services/bloodBank');
 const bloodInventService = require('../services/bloodInventory');
 const paymentService = require('../services/paymentDetail');
 const { success, error } = require('../utils/user_utils');
+const message = require('../utils/message');
+const statusCode = require('../utils/statusCode');
 
 // controller for registration
-exports.postUsers = async (req, res) => {
-  const email = await service.checkEmail(req.body.email);
-  const username = await service.checkUsername(req.body.username);
-  if (email == null && username == null && req.body.role == 'user') {
-    const data = await service.postUsers({
-      name: req.body.name,
-      username: req.body.username,
-      password: await bcrypt.hash(req.body.password, 10),
-      contact: req.body.contact,
-      address: req.body.address,
-      state: req.body.state,
-      city: req.body.city,
-      email: req.body.email,
-      role: req.body.role,
-      blood_group: req.body.blood_group,
-      created_by: req.body.username,
-      updated_by: req.body.username,
-      status: 'active',
-    });
-    success(res, data, 'User created successfully', 201);
-  } else if (req.body.role == 'blood_bank') {
-    const data = await service.postUsers({
-      name: req.body.name,
-      username: req.body.username,
-      password: await bcrypt.hash(req.body.password, 10),
-      contact: req.body.contact,
-      address: req.body.address,
-      state: req.body.state,
-      city: req.body.city,
-      email: req.body.email,
-      role: req.body.role,
-      blood_group: 'null',
-      created_by: req.body.username,
-      updated_by: req.body.username,
-      status: 'deactivate',
-    });
-    return success(
-      res,
-      data,
-      'Your request for registration is received and pending for approval!',
-      201,
-    );
-  } else if (req.body.role == 'super_user') {
-    return error(
-      res,
-      null,
-      'Can not register to this role,please choose another role!',
-      400,
-    );
-  } else {
-    return error(
-      res,
-      null,
-      'User with this email or username already exist',
-      400,
-    );
+exports.postUsers = async (req, res, next) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(40).required(),
+    username: Joi.string().alphanum().min(3).max(30)
+      .required(),
+    password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
+    contact: Joi.number().integer().min(10),
+    address: Joi.string().max(100).required(),
+    state: Joi.string().max(15).required(),
+    city: Joi.string().max(15).required(),
+    email: Joi.string().email({
+      minDomainSegments: 2,
+      tlds: { allow: ['com', 'net'] },
+    }),
+    role: Joi.string().min(4).max(40).required(),
+    blood_group: Joi.string().max(15).required(),
+  });
+  const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body;
+  const { error } = schema.validate({ name, username, password, contact, address, state, city, email, role, blood_group});
+  if (error) {
+    switch (error.details[0].context.key) {
+      case "name":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+      case "username":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+        case "password":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+        case "contact":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+        case "address":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+        case "state":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+        case "city":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+        case "email":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+        case "role":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+        case "blood_group":
+        res.status(500).json({ message: error.details[0].message });
+        break;
+      default:
+        res.status(500).json({ message: "An error occurred." });
+        break;
+    }
   }
+  return next();
+};
+
+  // const email = await service.checkEmail(req.body.email);
+  // const username = await service.checkUsername(req.body.username);
+  // if (email == null && username == null && req.body.role == 'user') {
+  //   const data = await service.postUsers({
+  //     name: req.body.name,
+  //     username: req.body.username,
+  //     password: await bcrypt.hash(req.body.password, 10),
+  //     contact: req.body.contact,
+  //     address: req.body.address,
+  //     state: req.body.state,
+  //     city: req.body.city,
+  //     email: req.body.email,
+  //     role: req.body.role,
+  //     blood_group: req.body.blood_group,
+  //     created_by: req.body.username,
+  //     updated_by: req.body.username,
+  //     status: 'active',
+  //   });
+  //   success(res, data, message.registered.value, statusCode.created.value);
+  // } else if (req.body.role == 'blood_bank') {
+  //   const data = await service.postUsers({
+  //     name: req.body.name,
+  //     username: req.body.username,
+  //     password: await bcrypt.hash(req.body.password, 10),
+  //     contact: req.body.contact,
+  //     address: req.body.address,
+  //     state: req.body.state,
+  //     city: req.body.city,
+  //     email: req.body.email,
+  //     role: req.body.role,
+  //     blood_group: 'null',
+  //     created_by: req.body.username,
+  //     updated_by: req.body.username,
+  //     status: 'deactivate',
+  //   });
+  //   return success(
+  //     res,
+  //     data,
+  //     message.under_process.value,
+  //     statusCode.Success.value,
+  //   );
+  // } else if (req.body.role == 'super_user') {
+  //   return error(
+  //     res,
+  //     null,
+  //     message.permission_denied.value,
+  //     statusCode.forbidden,
+  //   );
+  // } else {
+  //   return error(
+  //     res,
+  //     null,
+  //     'User with this email or username already exist',
+  //     400,
+  //   );
+  // }
 };
 
 // controller to get all users

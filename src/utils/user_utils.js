@@ -8,31 +8,22 @@ const getId = require('../services/user_service');
 exports.userUtils = (user) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(40).required(),
-
     username: Joi.string()
       .alphanum()
       .min(3)
       .max(30)
       // eslint-disable-next-line linebreak-style
       .required(),
-
     password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
-
     contact: Joi.number().integer().min(10),
-
     address: Joi.string().max(100).required(),
-
     email: Joi.string().email({
       minDomainSegments: 2,
       tlds: { allow: ['com', 'net'] },
     }),
-
     role: Joi.string().min(3).max(40).required(),
-
     blood_group: Joi.string().max(15).required(),
-
     state: Joi.string().max(15).required(),
-
     city: Joi.string().max(15).required(),
   });
 
