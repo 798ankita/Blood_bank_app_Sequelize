@@ -1,5 +1,6 @@
-"use strict";
-const { Model } = require("sequelize");
+/* eslint-disable linebreak-style */
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class bloodInventory extends Model {
     /**
@@ -8,36 +9,36 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-    models.bloodBank.hasOne(bloodInventory);
-    bloodInventory.belongsTo(models.bloodBank);
+      models.bloodBank.hasOne(bloodInventory);
+      bloodInventory.belongsTo(models.bloodBank);
     }
   }
 
   bloodInventory.init(
     {
       AB_positive: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       A_positive: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       B_positive: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       O_positive: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       AB_negative: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       A_negative: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       B_negative: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       O_negative: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       created_by: {
         type: DataTypes.STRING,
@@ -48,11 +49,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "bloodInventory",
-      tableName: "blood_inventory",
+      modelName: 'bloodInventory',
+      tableName: 'blood_inventory',
       paranoid: true,
       timestamps: true,
-    }
+    },
   );
   return bloodInventory;
 };

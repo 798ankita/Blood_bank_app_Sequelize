@@ -1,5 +1,6 @@
-"use strict";
-const { Model } = require("sequelize");
+/* eslint-disable linebreak-style */
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class paymentDetail extends Model {
     /**
@@ -8,43 +9,42 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-    models.bloodBank.hasMany(paymentDetail);
-    paymentDetail.belongsTo(models.bloodBank);
+      models.bloodBank.hasMany(paymentDetail);
+      paymentDetail.belongsTo(models.bloodBank);
 
-    models.User.hasMany(paymentDetail);
-    paymentDetail.belongsTo(models.User);
+      models.User.hasMany(paymentDetail);
+      paymentDetail.belongsTo(models.User);
 
-    models.userAction.hasOne(paymentDetail);
-    paymentDetail.belongsTo(models.userAction);
-
+      models.userAction.hasOne(paymentDetail);
+      paymentDetail.belongsTo(models.userAction);
     }
   }
 
   paymentDetail.init(
     {
       total_amount: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       payment_mode: {
         type: DataTypes.STRING,
       },
-      status:{
-        type:DataTypes.ENUM("pending","payment complete","payment failed")
+      status: {
+        type: DataTypes.ENUM('pending', 'payment complete', 'payment failed'),
       },
       created_by: {
         type: DataTypes.STRING,
       },
       updated_by: {
         type: DataTypes.STRING,
-      }
+      },
     },
     {
       sequelize,
-      modelName: "paymentDetail",
-      tableName: "payment_detail",
+      modelName: 'paymentDetail',
+      tableName: 'payment_detail',
       paranoid: true,
       timestamps: true,
-    }
+    },
   );
   return paymentDetail;
 };

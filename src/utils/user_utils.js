@@ -1,16 +1,22 @@
-const Joi = require("joi");
-const jwt = require("jsonwebtoken");
-const getId = require("../services/user_service");
-/*@Params:user
+/* eslint-disable linebreak-style */
+const Joi = require('joi');
+const jwt = require('jsonwebtoken');
+const getId = require('../services/user_service');
+/* @Params:user
   @Description:function to validate user data during registration
  */
-const userUtils = (user) => {
+exports.userUtils = (user) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(40).required(),
 
-    username: Joi.string().alphanum().min(3).max(30).required(),
+    username: Joi.string()
+      .alphanum()
+      .min(3)
+      .max(30)
+      // eslint-disable-next-line linebreak-style
+      .required(),
 
-    password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9@]{3,30}$")),
+    password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
 
     contact: Joi.number().integer().min(10),
 
@@ -18,7 +24,7 @@ const userUtils = (user) => {
 
     email: Joi.string().email({
       minDomainSegments: 2,
-      tlds: { allow: ["com", "net"] },
+      tlds: { allow: ['com', 'net'] },
     }),
 
     role: Joi.string().min(3).max(40).required(),
@@ -33,18 +39,18 @@ const userUtils = (user) => {
   return schema.validate(user);
 };
 
-/*@Params:user
+/* @Params:user
   @Description:function to validate user data while updating
  */
-const updateUser = (user) => {
+exports.updateUser = (user) => {
   const schema = Joi.object({
-    
     name: Joi.string().min(3).max(40).optional(),
 
-    username: Joi.string().alphanum().min(3).max(30).optional(),
+    username: Joi.string().alphanum().min(3).max(30)
+      .optional(),
 
     password: Joi.string()
-      .pattern(new RegExp("^[a-zA-Z0-9@]{3,30}$"))
+      .pattern(/^[a-zA-Z0-9@]{3,30}$/)
       .optional(),
 
     contact: Joi.number().integer().min(10).optional(),
@@ -52,7 +58,7 @@ const updateUser = (user) => {
     address: Joi.string().max(100).optional(),
 
     email: Joi.string()
-      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
       .optional(),
 
     role: Joi.string().min(3).max(40).optional(),
@@ -67,34 +73,32 @@ const updateUser = (user) => {
   return schema.validate(user);
 };
 
-//generate token 
-const jwtLogin = async (data) => {
-  console.log(data);
+// generate token
+exports.jwtLogin = async (data) => {
   const userId = await getId.checkUsername(data.username);
-  // console.log("my Data "+userId.id);
-  // console.log(userId);
-  if (userId){
-    return jwt.sign({id:userId.id, username:userId.username},process.env.JWT_SECRET_KEY, { expiresIn: "2000s" });
-   
+  if (userId) {
+    return jwt.sign(
+      { id: userId.id, username: userId.username },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: '2000s' },
+    );
   }
-  else{
-    return "user not exist";
-  }
-  };
 
-const success = (res, data, message, statuscode) => {
+  return 'user not exist';
+};
+
+exports.success = (res, data, message, statuscode) => {
   res.status(statuscode).json({
     status: statuscode,
-    data: data,
-    message:message,
+    data,
+    message,
   });
 };
 
-const error = (res,error,message, statuscode) => {
+exports.error = (res, err, message, statuscode) => {
   res.status(statuscode).json({
     status: statuscode,
-    message:message,
-    error:error
+    message,
+    err,
   });
 };
-module.exports = { userUtils, updateUser, jwtLogin, success, error };

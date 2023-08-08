@@ -1,14 +1,14 @@
-'use strict';
-const  {Sequelize, DataTypes} = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 // const Sequelize = require('sequelize');
 const process = require('process');
+const { Sequelize, DataTypes } = require('sequelize');
+
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+// eslint-disable-next-line import/no-dynamic-require
+const config = require(`${__dirname}/../config/config.json`)[env];
 const db = {};
-
 
 let sequelize;
 if (config.use_env_variable) {
@@ -17,37 +17,36 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-  db.Sequelize = Sequelize;
-  db.sequelize = sequelize;
-  db.user = require("./user")(sequelize,DataTypes);
-  db.action = require("./action")(sequelize,DataTypes);
-  db.bloodBank = require("./bloodBanks")(sequelize,DataTypes);
-  db.bloodInventory = require("./bloodInventory")(sequelize,DataTypes);
-  db.paymentDetail = require("./paymentDetails")(sequelize,DataTypes);
-  db.bloodPrice = require("./bloodPrice")(sequelize,DataTypes);
-  db.sequelize.sync();
-  console.log("All models were synchronized successfully.");
- 
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+db.user = require('./user')(sequelize, DataTypes);
+db.action = require('./action')(sequelize, DataTypes);
+db.bloodBank = require('./bloodBanks')(sequelize, DataTypes);
+db.bloodInventory = require('./bloodInventory')(sequelize, DataTypes);
+db.paymentDetail = require('./paymentDetails')(sequelize, DataTypes);
+db.bloodPrice = require('./bloodPrice')(sequelize, DataTypes);
+
+db.sequelize.sync();
+console.log('All models were synchronized successfully.');
+
 fs
   .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
+  .filter((file) => (
+    file.indexOf('.') !== 0
+      && file !== basename
+      && file.slice(-3) === '.js'
+      && file.indexOf('.test.js') === -1
+  ))
+  .forEach((file) => {
+    // eslint-disable-next-line global-require, import/no-dynamic-require
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
 
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
-
 
 module.exports = db;

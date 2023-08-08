@@ -1,31 +1,38 @@
-const db = require("../models/index");
+/* eslint-disable linebreak-style */
+/* eslint-disable eol-last */
+/* eslint-disable linebreak-style */
+/* eslint-disable consistent-return */
+const db = require('../models/index');
+
 const paymentDetails = db.paymentDetail;
 
 /* @Params:data
    @Description:This function adding data  in bill after sending blood request.
 */
 exports.paymentBill = async (data) => {
-    try {
-      const payment = await paymentDetails.create(data);
-      return payment;
-    } 
-    catch (err) {
-      console.log(err);
-    }
-  };
-  
+  try {
+    const payment = await paymentDetails.create(data);
+    return payment;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 /* @Params:data
    @Description:This function adding data  in bill after sending blood request.
 */
-  exports.updateAmount = async(id,data) => {
+exports.updateAmount = async (id, data) => {
   try {
-    const payment = await paymentDetails.update({status:"approved",total_amount:data},
-     { where:{
-        id:id
-      }});
+    const payment = await paymentDetails.update(
+      { status: 'approved', total_amount: data },
+      {
+        where: {
+          id,
+        },
+      },
+    );
     return payment;
-  } 
-  catch (err) {
+  } catch (err) {
     console.log(err);
   }
 };
@@ -35,10 +42,9 @@ exports.paymentBill = async (data) => {
 */
 exports.findReqId = async (id) => {
   try {
-    const requestId = await paymentDetails.findOne({ where: {userActionId:id} });
+    const requestId = await paymentDetails.findOne({ where: { userActionId: id } });
     return requestId;
-  } 
-  catch (err) {
-  console.log(err);
+  } catch (err) {
+    console.log(err);
   }
 };

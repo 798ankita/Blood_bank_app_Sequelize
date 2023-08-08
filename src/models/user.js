@@ -1,7 +1,9 @@
-'use strict';
+/* eslint-disable no-unused-vars */
+
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -11,62 +13,62 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-    
+
     }
   }
   User.init({
-    name:{
-      type: DataTypes.STRING
-     },
-     username: {
-       type: DataTypes.STRING,
-       allowNull: false
-     },
-     password: {
-       type: DataTypes.STRING,
-   },
-     contact: {
-       type: DataTypes.INTEGER,
-       allowNull: false
-     },
-     address: {
-       type: DataTypes.STRING,
-       allowNull: false
-     },
-     state:{
-       type: DataTypes.STRING,
-     },
-     city:{
-       type: DataTypes.STRING,
-     },
-     email: {
-       type: DataTypes.STRING,
-       allowNull: false
-     },
-    role:{
-     type:DataTypes.ENUM("user","blood_bank","super_user"),
+    name: {
+      type: DataTypes.STRING,
     },
-   blood_group:{
-     type:DataTypes.STRING,
-   },
-   status:{
-     type:DataTypes.ENUM("active", "deactivate"),
-     defaultValue : "active"
-   },
-   created_by:{
-     type: DataTypes.STRING,
-    
-   },
-   updated_by:{
-     type: DataTypes.STRING,
-     
-   }
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+    },
+    contact: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    state: {
+      type: DataTypes.STRING,
+    },
+    city: {
+      type: DataTypes.STRING,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.ENUM('user', 'blood_bank', 'super_user'),
+    },
+    blood_group: {
+      type: DataTypes.STRING,
+    },
+    status: {
+      type: DataTypes.ENUM('active', 'deactivate'),
+      defaultValue: 'active',
+    },
+    created_by: {
+      type: DataTypes.STRING,
+
+    },
+    updated_by: {
+      type: DataTypes.STRING,
+
+    },
   }, {
     sequelize,
     modelName: 'User',
     tableName: 'users',
     paranoid: true,
-    timestamps: true
+    timestamps: true,
   });
   return User;
 };

@@ -1,5 +1,9 @@
-const db = require("../models/index");
-const bloodInventory = db.bloodInventory;
+/* eslint-disable linebreak-style */
+/* eslint-disable consistent-return */
+/* eslint-disable linebreak-style */
+const db = require('../models/index');
+
+const { bloodInventory } = db;
 
 /* @Params:data
    @Description:This function adding details to blood Inventory table.
@@ -9,53 +13,53 @@ exports.addInventory = async (data) => {
     const detail = await bloodInventory.create(data);
     return detail;
   } catch (err) {
-    throw err;
+    console.log(err);
   }
 };
 
-/*@Params:bloodBankId
+/* @Params:bloodBankId
   @Description:This function find existing user's id
 */
 exports.findId = async (bloodBankId) => {
   try {
     const data = await bloodInventory.findOne({
-      where: { bloodBankId: bloodBankId },
+      where: { bloodBankId },
     });
     return data;
   } catch (err) {
-    throw err;
+    console.log(err);
   }
 };
 
-/*@Params:id
+/* @Params:id
   @Description:This function to check blood availability
 */
 exports.findInventory = async (id) => {
   try {
-    const data = await bloodInventory.findOne({ where: { id: id } });
+    const data = await bloodInventory.findOne({ where: { id } });
     return data;
   } catch (err) {
-    throw err;
+    console.log(err);
   }
 };
 
-/*@Params:id,data
+/* @Params:id,data
   @Description:function to update blood Inventory units.
   */
 exports.updateInventory = async (id, data) => {
   try {
     const detail = await bloodInventory.update(data, {
       where: {
-        id: id,
+        id,
       },
     });
     return detail;
   } catch (err) {
-    throw err;
+    console.log(err);
   }
 };
 
-/*@Params:bloodId, data
+/* @Params:bloodId, data
   @Description:function to update blood Inventory units automaticaly.
   */
 exports.updateAutoInventory = async (bloodId, data) => {
@@ -71,19 +75,18 @@ exports.updateAutoInventory = async (bloodId, data) => {
   }
 };
 
-/*@Params:bloodId, data
+/* @Params:bloodId, data
   @Description:function to update blood Inventory units automaticaly when donation complete.
   */
-  exports.inventoryUpdateDonation = async (bloodId,data) => {
-    try {
-      const change = await bloodInventory.update({data,status:"donation Complete"},{
-        where: {
-          bloodBankId: bloodId,
-        },
-      });
-      return change;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  
+exports.inventoryUpdateDonation = async (bloodId, data) => {
+  try {
+    const change = await bloodInventory.update({ data, status: 'donation Complete' }, {
+      where: {
+        bloodBankId: bloodId,
+      },
+    });
+    return change;
+  } catch (err) {
+    console.log(err);
+  }
+};

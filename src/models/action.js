@@ -1,6 +1,6 @@
-'use strict';
+/* eslint-disable linebreak-style */
 const {
-  Model
+  Model,
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -11,55 +11,54 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      
       models.User.hasMany(userAction, {
-        foreignKey: 'bloodbankId'
+        foreignKey: 'bloodbankId',
       });
-      userAction.belongsTo( models.User);
-  }
+      userAction.belongsTo(models.User);
+    }
   }
   userAction.init({
 
     blood_group: {
-      type: DataTypes.STRING
-  },
-  action:{
-    type: DataTypes.ENUM("donor","patient"),
-    allowNull: false
-  },
-  bloodBank:{
-    type: DataTypes.STRING,
-    allowNull:false
-  },
+      type: DataTypes.STRING,
+    },
+    action: {
+      type: DataTypes.ENUM('donor', 'patient'),
+      allowNull: false,
+    },
+    bloodBank: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     required_date: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
     },
     donation_date: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
     },
-    blood_unit:{
+    blood_unit: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
-  status:{
-    type:DataTypes.ENUM("pending", "approved","decline","cancelled","donation complete"),
-    defaultValue : "pending"
-  },
-  created_by:{
-    type: DataTypes.STRING,
-   
-  },
-  updated_by:{
-    type: DataTypes.STRING,
-  }
+    status: {
+      type: DataTypes.ENUM('pending', 'approved', 'decline', 'cancelled', 'donation complete'),
+      defaultValue: 'pending',
+    },
+    created_by: {
+      type: DataTypes.STRING,
+
+    },
+    updated_by: {
+      type: DataTypes.STRING,
+    },
   }, {
     sequelize,
     modelName: 'userAction',
     tableName: 'user_action',
     paranoid: true,
-    timestamps: true
+    timestamps: true,
   });
   return userAction;
 };

@@ -1,7 +1,12 @@
-const db = require("../models/index");
+/* eslint-disable linebreak-style */
+/* eslint-disable no-undef */
+/* eslint-disable consistent-return */
+/* eslint-disable linebreak-style */
+const db = require('../models/index');
+
 const User = db.user;
-const bloodBank = db.bloodBank;
-const action = db.action;
+const { bloodBank } = db;
+const { action } = db;
 // const sequelize = db.sequelize;
 
 /* @Params:userData
@@ -12,198 +17,186 @@ exports.postUsers = async (userData) => {
     const user = await User.create(userData);
     return user;
   } catch (err) {
-    throw err;
+    console.log(err);
   }
 };
 
-/* @Params:superUserData
-   @Description:This function creates superuser
+// /* @Params:superUserData
+//    @Description:This function creates superuser
+// */
+// exports.postsuperUsers = async (userData) => {
+//   try {
+//     const user = await superUser.create(userData);
+//     return user;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+/* @Params:userMail
+   @Description:This function find existing user with email
 */
-exports.postsuperUsers = async (userData) => {
+exports.checkEmail = async (userMail) => {
   try {
-    const user = await superUser.create(userData);
+    const user = await User.findOne({ where: { email: userMail } });
     return user;
   } catch (err) {
     console.log(err);
   }
 };
 
-/* @Params:userMail
-   @Description:This function find existing user with email
-*/
-exports.checkEmail = async (userMail) => {
-    try {
-      const user = await User.findOne({ where: { email:userMail } });
-      return user;
-    } 
-    catch (err) {
-    throw err;
-    }
-  };
-
-/*@Params:username
+/* @Params:username
   @Description:This function find existing user with username
 */
 exports.checkUsername = async (username) => {
   try {
-    const user = await User.findOne({ where: {username:username } });
+    const user = await User.findOne({ where: { username } });
     return user;
-  } 
-  catch (err) {
-  throw err;
+  } catch (err) {
+    console.log(err);
   }
 };
 
-/*@Params:id
+/* @Params:id
   @Description:This function find existing user's id
 */
-exports.userId = async(id) => {
+exports.userId = async (id) => {
   try {
-    const user = await User.findOne({ where: {id:id} });
+    const user = await User.findOne({ where: { id } });
     return user;
-  } 
-
-  catch (err) {
-  throw err;
+  } catch (err) {
+    console.log(err);
   }
 };
 
-/*@Params:usersData
+/* @Params:usersData
   @Description:function to get all users data
 */
-exports.getUsers = async (usersData) => {
+exports.getUsers = async () => {
   try {
     const users = await User.findAll({});
     return users;
   } catch (err) {
-    throw err;
+    console.log(err);
   }
 };
 
-/*@Params:userData
+/* @Params:userData
   @Description:function to get one user data
   */
 exports.getUser = async (id) => {
   try {
-    const user = await User.findOne(data,{
-      where:{
-        id:id
-      }    
+    const user = await User.findOne(data, {
+      where: {
+        id,
+      },
     });
     return user;
-  } 
-  catch (err) {
-  throw err;
+  } catch (err) {
+    console.log(err);
   }
 };
 
-/*@Params:userData
+/* @Params:userData
   @Description:function to update a user data
   */
-exports.updateUser = async (id,data) => {
+exports.updateUser = async (id, data) => {
   try {
-    const user = await User.update(data,{
-      where:{
-        id:id 
-      }    
-  });
+    const user = await User.update(data, {
+      where: {
+        id,
+      },
+    });
     return user;
-  } 
-   catch (err) {
-   throw err;
-   }
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-/*@Params:id
+/* @Params:id
   @Description:function to delete a user
  */
-  exports.deleteUser = async (id) => {
-    try {
-      const user = await User.destroy({
-        where:{
-          id:id
-        }
-      });
-      return user;
-    } 
-    catch (err) {
-    throw err;
-    }
-  };
+exports.deleteUser = async (id) => {
+  try {
+    const user = await User.destroy({
+      where: {
+        id,
+      },
+    });
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-  /*@Params:userData
+/* @Params:userData
   @Description:function to update a user data
   */
 exports.loginAuth = async (username) => {
   try {
-    const user = await User.findOne({ where: { username: username }})
+    const user = await User.findOne({ where: { username } });
     return user;
+  } catch (err) {
+    console.log('user not exist');
   }
-   catch (err) {
-   console.log("user not exist")
-   }
-  };
+};
 
 // getting all Pending requests from blood bank for registration
-  exports.bloodBankRegisterReq = async() =>
-  {
-    try {
-      const regiteredBldBank = await User.findAll({
-        where:{
-          status:"deactivate"
-        }
-      });
-      return regiteredBldBank ;
-    } catch (err) {
-      throw err;
-    }
-  };
+exports.bloodBankRegisterReq = async () => {
+  try {
+    const regiteredBldBank = await User.findAll({
+      where: {
+        status: 'deactivate',
+      },
+    });
+    return regiteredBldBank;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-  /*@Params:username
+/* @Params:username
   @Description:function to accept blood bank requests.
  */
-  exports.acceptedRequests =  async (username) =>
-  {
-    try {
-      const acceptRequest = await User.update({status:"active"},
-      {where:{ username : username }});
-      return acceptRequest ;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+exports.acceptedRequests = async (username) => {
+  try {
+    const acceptRequest = await User.update(
+      { status: 'active' },
+      { where: { username } },
+    );
+    return acceptRequest;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-  /*@Params:username
+/* @Params:username
   @Description:function to decline blood bank requests.
  */
-  exports.declineRequests = async (username) => {
-    try {
-      const user = await User.destroy({
-        where:{
-          username:username
-        }
-      });
-      return user;
-    } 
-    catch (err) {
-    throw err;
-    }
-  };
+exports.declineRequests = async (username) => {
+  try {
+    const user = await User.destroy({
+      where: {
+        username,
+      },
+    });
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
-
-  /*@Params:name
+/* @Params:name
   @Description:This function find existing blood bank name.
 */
 exports.findName = async (name) => {
   try {
-    const user = await bloodBank.findOne({ where: {name:name} });
+    const user = await bloodBank.findOne({ where: { name } });
     return user;
-  } 
-  catch (err) {
-  throw err;
+  } catch (err) {
+    console.log(err);
   }
 };
-
 
 /* @Params:userData
    @Description:This function creates requests for blood by user.
@@ -212,9 +205,7 @@ exports.sendRequest = async (userData) => {
   try {
     const request = await action.create(userData);
     return request;
-  } 
-  catch (err) {
-  console.log(err);
+  } catch (err) {
+    console.log(err);
   }
-}; 
-
+};

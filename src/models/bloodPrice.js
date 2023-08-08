@@ -1,5 +1,6 @@
-"use strict";
-const { Model } = require("sequelize");
+/* eslint-disable linebreak-style */
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class bloodPricePerUnit extends Model {
     /**
@@ -8,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-    models.bloodBank.hasOne(bloodPricePerUnit);
-    bloodPricePerUnit.belongsTo(models.bloodBank);
+      models.bloodBank.hasOne(bloodPricePerUnit);
+      bloodPricePerUnit.belongsTo(models.bloodBank);
     }
   }
 
@@ -48,11 +49,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "bloodPricePerUnit",
-      tableName: "blood_price_per_unit",
+      modelName: 'bloodPricePerUnit',
+      tableName: 'blood_price_per_unit',
       paranoid: true,
       timestamps: true,
-    }
+    },
   );
   return bloodPricePerUnit;
 };
