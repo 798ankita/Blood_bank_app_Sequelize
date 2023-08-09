@@ -1,11 +1,5 @@
-/* eslint-disable linebreak-style */
-// eslint-disable-next-line linebreak-style
-/* eslint-disable keyword-spacing */
-/* eslint-disable linebreak-style */
-/* eslint-disable eqeqeq */
-/* eslint-disable consistent-return */
-/* eslint-disable linebreak-style */
 const bcrypt = require('bcrypt');
+const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const service = require('../services/user_service');
 const actionService = require('../services/action');
@@ -13,71 +7,111 @@ const bloodBankservice = require('../services/bloodBank');
 const bloodInventService = require('../services/bloodInventory');
 const paymentService = require('../services/paymentDetail');
 const { success, error } = require('../utils/user_utils');
+const message = require('../utils/message');
+const statusCode = require('../utils/statusCode');
 
 // controller for registration
 exports.postUsers = async (req, res) => {
-  const email = await service.checkEmail(req.body.email);
-  const username = await service.checkUsername(req.body.username);
-  if (email == null && username == null && req.body.role == 'user') {
-    const data = await service.postUsers({
-      name: req.body.name,
-      username: req.body.username,
-      password: await bcrypt.hash(req.body.password, 10),
-      contact: req.body.contact,
-      address: req.body.address,
-      state: req.body.state,
-      city: req.body.city,
-      email: req.body.email,
-      role: req.body.role,
-      blood_group: req.body.blood_group,
-      created_by: req.body.username,
-      updated_by: req.body.username,
-      status: 'active',
-    });
-    success(res, data, 'User created successfully', 201);
-  } else if (req.body.role == 'blood_bank') {
-    const data = await service.postUsers({
-      name: req.body.name,
-      username: req.body.username,
-      password: await bcrypt.hash(req.body.password, 10),
-      contact: req.body.contact,
-      address: req.body.address,
-      state: req.body.state,
-      city: req.body.city,
-      email: req.body.email,
-      role: req.body.role,
-      blood_group: 'null',
-      created_by: req.body.username,
-      updated_by: req.body.username,
-      status: 'deactivate',
-    });
-    return success(
-      res,
-      data,
-      'Your request for registration is received and pending for approval!',
-      201,
-    );
-  } else if (req.body.role == 'super_user') {
-    return error(
-      res,
-      null,
-      'Can not register to this role,please choose another role!',
-      400,
-    );
-  } else {
-    return error(
-      res,
-      null,
-      'User with this email or username already exist',
-      400,
-    );
-  }
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(40).required(),
+    username: Joi.string().alphanum().min(3).max(30)
+      .required(),
+    password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
+    contact: Joi.number().integer().min(10),
+    address: Joi.string().max(100).required(),
+    state: Joi.string().max(15).required(),
+    city: Joi.string().max(15).required(),
+    email: Joi.string().email({
+      minDomainSegments: 2,
+      tlds: { allow: ['com', 'net'] },
+    }),
+    role: Joi.string().min(4).max(40).required(),
+    blood_group: Joi.string().max(15).required(),
+  }).options({ abortEarly: false });
+  
+  const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body;
+  const { error } = schema.validate({ name, username, password, contact, address, state, city, email, role, blood_group});
+  if (error) {
+    return res.json( {message: error.details[0].message});
+  }  
+  const userInfo = {name, username, password, contact, address, state, city, email, role, blood_group};
+  userInfo.created_by = username;
+  userInfo.updated_by = username;
+  userInfo.status = 'active';
+  
+  const checkEmail = await service.checkEmail(req.body.email);
+  const checkUsername = await service.checkUsername(req.body.username);
+  if (checkEmail == null && checkUsername == null && req.body.role == 'user') {
+     const data = await service.postUsers(userInfo);
 };
+}
+  // const email = await service.checkEmail(req.body.email);
+  // const username = await service.checkUsername(req.body.username);
+  // if (email == null && username == null && req.body.role == 'user') {
+  //   const data = await service.postUsers({
+  //     name: req.body.name,
+  //     username: req.body.username,
+  //     password: await bcrypt.hash(req.body.password, 10),
+  //     contact: req.body.contact,
+  //     address: req.body.address,
+  //     state: req.body.state,
+  //     city: req.body.city,
+  //     email: req.body.email,
+  //     role: req.body.role,
+  //     blood_group: req.body.blood_group,
+  //     created_by: req.body.username,
+  //     updated_by: req.body.username,
+  //     status: 'active',
+  //   });
+  //   success(res, data, message.registered.value, statusCode.created.value);
+  // } else if (req.body.role == 'blood_bank') {
+  //   const data = await service.postUsers({
+  //     name: req.body.name,
+  //     username: req.body.username,
+  //     password: await bcrypt.hash(req.body.password, 10),
+  //     contact: req.body.contact,
+  //     address: req.body.address,
+  //     state: req.body.state,
+  //     city: req.body.city,
+  //     email: req.body.email,
+  //     role: req.body.role,
+  //     blood_group: 'null',
+  //     created_by: req.body.username,
+  //     updated_by: req.body.username,
+  //     status: 'deactivate',
+  //   });
+  //   return success(
+  //     res,
+  //     data,
+  //     message.under_process.value,
+  //     statusCode.Success.value,
+  //   );
+  // } else if (req.body.role == 'super_user') {
+  //   return error(
+  //     res,
+  //     null,
+  //     message.permission_denied.value,
+  //     statusCode.forbidden,
+  //   );
+  // } else {
+  //   return error(
+  //     res,
+  //     null,
+  //     'User with this email or username already exist',
+  //     400,
+  //   );
+  // }
+// }
 
 // controller to get all users
 exports.getUsers = async (req, res) => {
-  const data = await service.getUsers({});
-  success(res, data, 'All users data', 200);
+  try {
+    const data = await service.getUsers({});
+   return success(res, data, message.success,statusCode.Success);
+
+  } catch (err) {
+    return error(res,err,message.server_error,statusCode.internal_server_error);
+  }
 };
 
 // update a user
@@ -86,10 +120,10 @@ try {
     const userData = req.data;
     const userToken = await service.userId(userData);
     const data = await service.updateUser(userToken.id, req.body);
-    success(res, data, 'user data updated successfully', 200);
+    return success(res, data, message.updated,statusCode.Success);
   };
 } catch (err) {
-  console.log(err);
+  return error(res,err,message.server_error,statusCode.internal_server_error);
 }
 
 // get one user
@@ -100,13 +134,13 @@ try {
       const userToken = await service.userId(userData);
       const data = await service.getUser(userToken.id, req.body);
       console.log(data);
-      success(res, data, 'user data', 200);
+      success(res, data,message.user_data,statusCode.Success);
     } catch (err) {
-      console.log(err);
+      return error(res,err,message.server_error,statusCode.internal_server_error);
     }
   };
 } catch (err) {
-  console.log(err);
+  return error(res,err,message.server_error,statusCode.internal_server_error);
 }
 
 // delete a user
@@ -114,9 +148,9 @@ exports.deleteUser = async (req, res) => {
   try {
     const userId = req.data;
     await service.deleteUser(userId);
-    success(res, '', 'User deleted successfully', 200);
+    success(res,' ',message.user_delete,statusCode.Success);
   } catch (err) {
-    console.log(err);
+    return error(res,err,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -138,20 +172,15 @@ exports.loginUser = async (req, res) => {
           token: req.token,
         });
       } if (loginData.status == 'deactivate') {
-        return error(
-          res,
-          "Can't login, Registration request pending for approval",
-          'Registration pending for approval',
-          213,
-        );
+        return error(res," ",message.request_pending,statusCode.forbidden);
       }
       // Passwords not matched
-      return error(res, 'invalid credentials', 'wrong password', 401);
+      return error(res, 'invalid credentials', 'wrong password',statusCode.unauthorise);
     }
     // invalid credentials for login
     return error(res, 'error', 'Invalid credentials', 401);
   } catch (err) {
-    return error(res, 'error', 'Internal Server Error', 500);
+    return error(res,err,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -167,7 +196,7 @@ exports.logoutUser = (req, res) => {
       return error(res, 'error', 'Internal Server Error', 500);
     });
   } catch (err) {
-    console.log(err);
+    return error(res,err,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -179,13 +208,13 @@ exports.pendingRegister = async (req, res) => {
     if (data.role == 'super_user') {
       const declineReq = await service.bloodBankRegisterReq();
       if (declineReq == null) {
-        return success(res, 'data not found', 'No requests available', 200);
+        return success(res, 'data not found', 'No requests available',statusCode.Success);
       }
-      return success(res, declineReq, 'All requests', 200);
+      return success(res, declineReq, 'All requests',statusCode.Success);
     }
     return error(res, 'error!', 'do not have permission!', 400);
   } catch (err) {
-    console.log(err);
+    return error(res,err,message.server_error,statusCode.internal_server_error);
   }
 };
 

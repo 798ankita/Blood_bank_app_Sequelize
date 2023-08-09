@@ -11,7 +11,7 @@ const bloodBank = require('./bloodBankRoutes');
 router.get('/users', userRoutes.routeAllUsers);
 
 // route to create user
-router.post('/register', userMiddleware.data, userRoutes.routeRegisterUsers);
+router.post('/register', userRoutes.routeRegisterUsers);
 
 // route to get one user
 router.get('/user', userMiddleware.verifyToken, userRoutes.routeOneUser);
