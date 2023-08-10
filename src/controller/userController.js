@@ -43,8 +43,67 @@ exports.postUsers = async (req, res) => {
   const checkUsername = await service.checkUsername(req.body.username);
   if (checkEmail == null && checkUsername == null && req.body.role == 'user') {
      const data = await service.postUsers(userInfo);
+  }
+
 };
-}
+
+  // const email = await service.checkEmail(req.body.email);
+  // const username = await service.checkUsername(req.body.username);
+  // if (email == null && username == null && req.body.role == 'user') {
+  //   const data = await service.postUsers({
+  //     name: req.body.name,
+  //     username: req.body.username,
+  //     password: await bcrypt.hash(req.body.password, 10),
+  //     contact: req.body.contact,
+  //     address: req.body.address,
+  //     state: req.body.state,
+  //     city: req.body.city,
+  //     email: req.body.email,
+  //     role: req.body.role,
+  //     blood_group: req.body.blood_group,
+  //     created_by: req.body.username,
+  //     updated_by: req.body.username,
+  //     status: 'active',
+  //   });
+  //   success(res, data, message.registered.value, statusCode.created.value);
+  // } else if (req.body.role == 'blood_bank') {
+  //   const data = await service.postUsers({
+  //     name: req.body.name,
+  //     username: req.body.username,
+  //     password: await bcrypt.hash(req.body.password, 10),
+  //     contact: req.body.contact,
+  //     address: req.body.address,
+  //     state: req.body.state,
+  //     city: req.body.city,
+  //     email: req.body.email,
+  //     role: req.body.role,
+  //     blood_group: 'null',
+  //     created_by: req.body.username,
+  //     updated_by: req.body.username,
+  //     status: 'deactivate',
+  //   });
+  //   return success(
+  //     res,
+  //     data,
+  //     message.under_process.value,
+  //     statusCode.Success.value,
+  //   );
+  // } else if (req.body.role == 'super_user') {
+  //   return error(
+  //     res,
+  //     null,
+  //     message.permission_denied.value,
+  //     statusCode.forbidden,
+  //   );
+  // } else {
+  //   return error(
+  //     res,
+  //     null,
+  //     'User with this email or username already exist',
+  //     400,
+  //   );
+  // }
+// };
   // const email = await service.checkEmail(req.body.email);
   // const username = await service.checkUsername(req.body.username);
   // if (email == null && username == null && req.body.role == 'user') {
