@@ -56,121 +56,6 @@ console.log(err);
 }
 };
 
-  // const email = await service.checkEmail(req.body.email);
-  // const username = await service.checkUsername(req.body.username);
-  // if (email == null && username == null && req.body.role == 'user') {
-  //   const data = await service.postUsers({
-  //     name: req.body.name,
-  //     username: req.body.username,
-  //     password: await bcrypt.hash(req.body.password, 10),
-  //     contact: req.body.contact,
-  //     address: req.body.address,
-  //     state: req.body.state,
-  //     city: req.body.city,
-  //     email: req.body.email,
-  //     role: req.body.role,
-  //     blood_group: req.body.blood_group,
-  //     created_by: req.body.username,
-  //     updated_by: req.body.username,
-  //     status: 'active',
-  //   });
-  //   success(res, data, message.registered.value, statusCode.created.value);
-  // } else if (req.body.role == 'blood_bank') {
-  //   const data = await service.postUsers({
-  //     name: req.body.name,
-  //     username: req.body.username,
-  //     password: await bcrypt.hash(req.body.password, 10),
-  //     contact: req.body.contact,
-  //     address: req.body.address,
-  //     state: req.body.state,
-  //     city: req.body.city,
-  //     email: req.body.email,
-  //     role: req.body.role,
-  //     blood_group: 'null',
-  //     created_by: req.body.username,
-  //     updated_by: req.body.username,
-  //     status: 'deactivate',
-  //   });
-  //   return success(
-  //     res,
-  //     data,
-  //     message.under_process.value,
-  //     statusCode.Success.value,
-  //   );
-  // } else if (req.body.role == 'super_user') {
-  //   return error(
-  //     res,
-  //     null,
-  //     message.permission_denied.value,
-  //     statusCode.forbidden,
-  //   );
-  // } else {
-  //   return error(
-  //     res,
-  //     null,
-  //     'User with this email or username already exist',
-  //     400,
-  //   );
-  // }
-// };
-  // const email = await service.checkEmail(req.body.email);
-  // const username = await service.checkUsername(req.body.username);
-  // if (email == null && username == null && req.body.role == 'user') {
-  //   const data = await service.postUsers({
-  //     name: req.body.name,
-  //     username: req.body.username,
-  //     password: await bcrypt.hash(req.body.password, 10),
-  //     contact: req.body.contact,
-  //     address: req.body.address,
-  //     state: req.body.state,
-  //     city: req.body.city,
-  //     email: req.body.email,
-  //     role: req.body.role,
-  //     blood_group: req.body.blood_group,
-  //     created_by: req.body.username,
-  //     updated_by: req.body.username,
-  //     status: 'active',
-  //   });
-  //   success(res, data, message.registered.value, statusCode.created.value);
-  // } else if (req.body.role == 'blood_bank') {
-  //   const data = await service.postUsers({
-  //     name: req.body.name,
-  //     username: req.body.username,
-  //     password: await bcrypt.hash(req.body.password, 10),
-  //     contact: req.body.contact,
-  //     address: req.body.address,
-  //     state: req.body.state,
-  //     city: req.body.city,
-  //     email: req.body.email,
-  //     role: req.body.role,
-  //     blood_group: 'null',
-  //     created_by: req.body.username,
-  //     updated_by: req.body.username,
-  //     status: 'deactivate',
-  //   });
-  //   return success(
-  //     res,
-  //     data,
-  //     message.under_process.value,
-  //     statusCode.Success.value,
-  //   );
-  // } else if (req.body.role == 'super_user') {
-  //   return error(
-  //     res,
-  //     null,
-  //     message.permission_denied.value,
-  //     statusCode.forbidden,
-  //   );
-  // } else {
-  //   return error(
-  //     res,
-  //     null,
-  //     'User with this email or username already exist',
-  //     400,
-  //   );
-  // }
-// }
-
 // controller to get all users
 exports.getUsers = async (req, res) => {
   try {
@@ -183,34 +68,34 @@ exports.getUsers = async (req, res) => {
 };
 
 //update a user
-exports.updatedUser = async (req, res) => {
-  try {
-    const schema = Joi.object({
-      name: Joi.string().min(3).max(40),
-      username: Joi.string().alphanum().min(3).max(30),
-      password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
-      contact: Joi.number().integer().min(10),
-      address: Joi.string().max(100),
-      state: Joi.string().max(15),
-      city: Joi.string().max(15),
-      email: Joi.string().email({minDomainSegments: 2,tlds: { allow: ['com', 'net'] },}),
-      role: Joi.string().min(4).max(40),
-      blood_group: Joi.string().max(15),
-    }).options({ abortEarly: false });
+// exports.updatedUser = async (req, res) => {
+//   try {
+//     const schema = Joi.object({
+//       name: Joi.string().min(3).max(40),
+//       username: Joi.string().alphanum().min(3).max(30),
+//       password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
+//       contact: Joi.number().integer().min(10),
+//       address: Joi.string().max(100),
+//       state: Joi.string().max(15),
+//       city: Joi.string().max(15),
+//       email: Joi.string().email({minDomainSegments: 2,tlds: { allow: ['com', 'net'] },}),
+//       role: Joi.string().min(4).max(40),
+//       blood_group: Joi.string().max(15),
+//     }).options({ abortEarly: false });
   
-    const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body; 
-    const { gotError } = schema.validate({ name, username,  password, contact, address, state, city, email, role, blood_group});
-    if (gotError) {
-      return res.json( {message: gotError.details[0].message});
-    }; 
-  const userData = req.data;
-  const userToken = await service.userId(userData);
-  const data = await service.updateUser(userToken.id, req.body);
-  return success(res, data, message.updated,statusCode.Success);
-} catch (err) {
-  return error(res,err,message.server_error,statusCode.internal_server_error);
-}
-};
+//     const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body; 
+//     const { gotError } = schema.validate({ name, username,  password, contact, address, state, city, email, role, blood_group});
+//     if (gotError) {
+//       return res.json( {message: gotError.details[0].message});
+//     }; 
+//   const userData = req.data;
+//   const userToken = await service.userId(userData);
+//   const data = await service.updateUser(userToken.id, req.body);
+//   return success(res, data, message.updated,statusCode.Success);
+// } catch (err) {
+//   return error(res,err,message.server_error,statusCode.internal_server_error);
+// }
+// };
 
 
 // update a user
@@ -271,7 +156,7 @@ exports.loginUser = async (req, res) => {
         return error(res," ",message.request_pending,statusCode.forbidden);
       }
       // Passwords not matched
-      return error(res, 'invalid credentials', 'wrong password',statusCode.unauthorise);
+      return error(res, 'invalid credentials', 'wrong password',statusCode.unauthorized);
     }
     // invalid credentials for login
     return error(res, 'error', 'Invalid credentials', 401);
