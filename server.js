@@ -1,8 +1,6 @@
-/* eslint-disable linebreak-style */
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-// require('./src/config/index');
 const router = require('./src/router/index');
 
 const app = express();
