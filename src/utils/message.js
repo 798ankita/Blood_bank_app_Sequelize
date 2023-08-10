@@ -9,5 +9,6 @@ const message = {
   user_data: 'User data',
   user_delete: 'User deleted successfully',
   request_pending: 'Request pending for approval',
+  already_exists: 'Email or username already exists',
 };
 module.exports = message;
