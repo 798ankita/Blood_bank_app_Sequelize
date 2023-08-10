@@ -46,7 +46,7 @@ router.patch('/user/completePayment', userMiddleware.verifyToken, userRoutes.com
 /** *******************************blood_bank_Routes***************************** */
 
 // route to create blood_bank
-router.post('/register/blood_bank', userMiddleware.data, userRoutes.routeRegisterUsers);
+router.post('/register/blood_bank',userRoutes.routeRegisterUsers);
 
 // route to login a blood_bank
 router.patch('/login/blood_bank', userMiddleware.login, userRoutes.routeLoginUser);
