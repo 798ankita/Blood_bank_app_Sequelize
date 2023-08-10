@@ -12,6 +12,8 @@ const statusCode = require('../utils/statusCode');
 
 // controller for registration
 exports.postUsers = async (req, res) => {
+  try{
+//joi validations to validate request data
   const schema = Joi.object({
     name: Joi.string().min(3).max(40).required(),
     username: Joi.string().alphanum().min(3).max(30)
@@ -28,23 +30,30 @@ exports.postUsers = async (req, res) => {
     role: Joi.string().min(4).max(40).required(),
     blood_group: Joi.string().max(15).required(),
   }).options({ abortEarly: false });
-  
-  const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body;
-  const { error } = schema.validate({ name, username, password, contact, address, state, city, email, role, blood_group});
-  if (error) {
-    return res.json( {message: error.details[0].message});
-  }  
-  const userInfo = {name, username, password, contact, address, state, city, email, role, blood_group};
+
+  const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body; 
+  const { gotError } = schema.validate({ name, username,  password, contact, address, state, city, email, role, blood_group});
+  if (gotError) {
+    return res.json( {message: gotError.details[0].message});
+  }; 
+
+  const hashPassword = await bcrypt.hash(password,10);
+  const userInfo = {name, username, hashPassword, contact, address, state, city, email, role, blood_group};
   userInfo.created_by = username;
   userInfo.updated_by = username;
   userInfo.status = 'active';
-  
-  const checkEmail = await service.checkEmail(req.body.email);
-  const checkUsername = await service.checkUsername(req.body.username);
-  if (checkEmail == null && checkUsername == null && req.body.role == 'user') {
-     const data = await service.postUsers(userInfo);
+  const checkEmail = await service.checkEmail(email);
+  const checkUsername = await service.checkUsername(username);
+  if (checkEmail == null && checkUsername == null) {
+  const data = await service.postUsers(userInfo);
+  return success (res,data,message.registered,statusCode.Accepted);
   }
-
+  else{
+  return error (res," ",message.already_exists,statusCode.forbidden);
+  }
+}catch(err){
+console.log(err);
+}
 };
 
   // const email = await service.checkEmail(req.body.email);
@@ -165,7 +174,7 @@ exports.postUsers = async (req, res) => {
 // controller to get all users
 exports.getUsers = async (req, res) => {
   try {
-    const data = await service.getUsers({});
+    const data = await service.getUsers();
    return success(res, data, message.success,statusCode.Success);
 
   } catch (err) {
@@ -173,20 +182,51 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+//update a user
+exports.updatedUser = async (req, res) => {
+  try {
+    const schema = Joi.object({
+      name: Joi.string().min(3).max(40),
+      username: Joi.string().alphanum().min(3).max(30),
+      password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
+      contact: Joi.number().integer().min(10),
+      address: Joi.string().max(100),
+      state: Joi.string().max(15),
+      city: Joi.string().max(15),
+      email: Joi.string().email({minDomainSegments: 2,tlds: { allow: ['com', 'net'] },}),
+      role: Joi.string().min(4).max(40),
+      blood_group: Joi.string().max(15),
+    }).options({ abortEarly: false });
+  
+    const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body; 
+    const { gotError } = schema.validate({ name, username,  password, contact, address, state, city, email, role, blood_group});
+    if (gotError) {
+      return res.json( {message: gotError.details[0].message});
+    }; 
+  const userData = req.data;
+  const userToken = await service.userId(userData);
+  const data = await service.updateUser(userToken.id, req.body);
+  return success(res, data, message.updated,statusCode.Success);
+} catch (err) {
+  return error(res,err,message.server_error,statusCode.internal_server_error);
+}
+};
+
+
 // update a user
-try {
-  exports.updatedUser = async (req, res) => {
+exports.updatedUser = async (req, res) => {
+    try {  
     const userData = req.data;
     const userToken = await service.userId(userData);
     const data = await service.updateUser(userToken.id, req.body);
     return success(res, data, message.updated,statusCode.Success);
+  } catch (err) {
+    return error(res,err,message.server_error,statusCode.internal_server_error);
+  }
   };
-} catch (err) {
-  return error(res,err,message.server_error,statusCode.internal_server_error);
-}
 
 // get one user
-try {
+
   exports.getUser = async (req, res) => {
     try {
       const userData = req.data;
@@ -198,9 +238,6 @@ try {
       return error(res,err,message.server_error,statusCode.internal_server_error);
     }
   };
-} catch (err) {
-  return error(res,err,message.server_error,statusCode.internal_server_error);
-}
 
 // delete a user
 exports.deleteUser = async (req, res) => {
