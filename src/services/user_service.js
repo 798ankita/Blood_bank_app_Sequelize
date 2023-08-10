@@ -1,13 +1,8 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
-/* eslint-disable consistent-return */
-/* eslint-disable linebreak-style */
 const db = require('../models/index');
 
 const User = db.user;
 const { bloodBank } = db;
 const { action } = db;
-// const sequelize = db.sequelize;
 
 /* @Params:userData
    @Description:This function creates users
@@ -135,7 +130,7 @@ exports.deleteUser = async (id) => {
 exports.loginAuth = async (username) => {
   try {
     const user = await User.findOne({ where: { username } });
-    return user;
+  return user;
   } catch (err) {
     console.log('user not exist');
   }
