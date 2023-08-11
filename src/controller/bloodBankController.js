@@ -1,6 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable eqeqeq */
-/* eslint-disable linebreak-style */
 const userService = require('../services/user_service');
 const bloodBankService = require('../services/bloodBank');
 const inventoryService = require('../services/bloodInventory');
@@ -15,11 +12,7 @@ exports.bldBankDetails = async (req, res) => {
     const userId = req.data;
     const userToken = await userService.userId(userId);
     const findId = await bloodBankService.findId(userId);
-    if (
-      userToken.role == 'blood_bank'
-      && userToken.status == 'active'
-      && findId == null
-    ) {
+    if (userToken.status == 'active'&& findId == null) {
       const details = await bloodBankService.bloodBankDetail(userToken.id, {
         name: req.body.name,
         logo: req.body.logo,
@@ -47,7 +40,7 @@ exports.bldBankDetails = async (req, res) => {
 // controller to get all bloodbanks.
 exports.allBloodBanks = async (req, res) => {
   try {
-    const data = await bloodBankService.allBldBankData({});
+    const data = await bloodBankService.allBldBankData();
     return success(res, data, 'All Blood banks', 200);
   } catch (err) {
     console.log(err);
@@ -62,12 +55,7 @@ exports.bloodInventory = async (req, res) => {
     const userToken = await userService.userId(userId);
     const bloodBankId = await bloodBankService.findId(userToken.id);
     const allData = await inventoryService.findId(bloodBankId.id);
-    if (
-      (userToken.role == 'blood_bank'
-        && bloodBankId.status == 'active'
-        && allData == null)
-      || allData < 1
-    ) {
+    if (bloodBankId.status == 'active' && allData == null || allData < 1){
       const details = await inventoryService.addInventory({
         AB_positive: req.body.AB_positive,
         A_positive: req.body.A_positive,
@@ -94,16 +82,11 @@ exports.bloodInventory = async (req, res) => {
 exports.bloodPrice = async (req, res) => {
   try {
     const userId = req.data;
-    const userToken = await userService.userId(userId);
+    // const userToken = await userService.userId(userId);
     const bloodBankId = await bloodBankService.findId(userId);
     const inventoryData = await inventoryService.findId(bloodBankId.id);
     const priceData = await bloodPriceService.findId(bloodBankId.id);
-    if (
-      userToken.role == 'blood_bank'
-      && bloodBankId.status == 'active'
-      && inventoryData != null
-      && priceData == null
-    ) {
+    if (bloodBankId.status == 'active' && inventoryData != null && priceData == null) {
       const details = await bloodPriceService.addBloodPrice({
         AB_positive: req.body.AB_positive,
         A_positive: req.body.A_positive,
@@ -131,7 +114,7 @@ exports.updatedInventory = async (req, res) => {
   try {
     const userToken = await userService.userId(req.data);
     const bloodBank = await bloodBankService.findId(userToken.id);
-    if (bloodBank.status == 'active' && userToken.role == 'blood_bank') {
+    if (bloodBank.status == 'active') {
       const data = await inventoryService.updateInventory(
         userToken.id,
         req.body,
@@ -151,7 +134,7 @@ exports.updateBloodPrice = async (req, res) => {
     const userToken = await userService.userId(req.data);
     const bloodBank = await bloodBankService.findId(userToken.id);
     // const bloodBankId = await bloodPriceService.findId(bloodBank.id);
-    if (bloodBank.status == 'active' && userToken.role == 'blood_bank') {
+    if (bloodBank.status == 'active') {
       const data = await bloodPriceService.updatePriceDetails(
         userToken.id,
         req.body,

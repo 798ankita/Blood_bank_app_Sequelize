@@ -1,7 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable eqeqeq */
-/* eslint-disable consistent-return */
-/* eslint-disable linebreak-style */
 const userService = require('../services/user_service');
 const actionService = require('../services/action');
 const inventoryServices = require('../services/bloodInventory');
@@ -9,7 +5,6 @@ const bloodBankService = require('../services/bloodBank');
 const paymentService = require('../services/paymentDetail');
 const bloodPriceService = require('../services/bloodPrice');
 const { success, error } = require('../utils/user_utils');
-// const data = require('../middleware/userMiddleware');
 
 // controller to get all request created by users for blood
 exports.getAllBloodRequests = async (req, res) => {
@@ -19,7 +14,7 @@ exports.getAllBloodRequests = async (req, res) => {
     if (requestData.length > 0) {
       return success(res, requestData, 'All requests for blood', 200);
     }
-    return success(res, ' ', 'requests not avalable', 200);
+    return success(res, ' ', 'requests not available', 200);
   } catch (err) {
     console.log(err);
     return error(res, 'error', 'Internal server error', 500);
@@ -36,7 +31,6 @@ exports.acceptBloodRequest = async (req, res) => {
     if (
       requestData != null
       && requestData.status == 'pending'
-      && data.role == 'blood_bank'
       && requestData.action == 'patient'
       && bloodBank.id == requestData.bloodbankId
     ) {
@@ -66,7 +60,6 @@ exports.acceptBloodRequest = async (req, res) => {
       }
     } else if (
       requestData.status == 'pending'
-      && data.role == 'blood_bank'
       && requestData.action == 'donor'
       && bloodBank.id == requestData.bloodbankId
     ) {
@@ -92,7 +85,7 @@ exports.acceptBloodRequest = async (req, res) => {
 // generate bill and send to user
 exports.generateBill = async (req, res) => {
   try {
-    const userData = await userService.userId(req.data);
+    //const userData = await userService.userId(req.data);
     const requestData = await actionService.findRequestId(req.body.id);
     const reqBloodGroup = requestData.blood_group;
     const reqBloodUnits = requestData.blood_unit;
@@ -102,7 +95,6 @@ exports.generateBill = async (req, res) => {
     const checkPaymentId = await paymentService.findReqId(requestData.id);
     if (
       checkPaymentId.status == 'pending'
-      && userData.role == 'user'
       && requestData.status == 'approved'
       && requestData.bloodbankId == bloodPrice.bloodBankId
     ) {
@@ -132,7 +124,6 @@ exports.bloodCollected = async (req, res) => {
     if (
       requestData != null
     && requestData.status == 'approved'
-    && data.role == 'blood_bank'
     && requestData.action == 'donor'
     && bloodBank.id == requestData.bloodbankId
     ) {
