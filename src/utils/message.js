@@ -11,5 +11,6 @@ const message = {
   request_pending: 'Request pending for approval',
   already_exists: 'Email or username already exists',
   not_exists: 'user not exists',
+  request_approved: 'Your request has been approved'
 };
 module.exports = message;
