@@ -32,26 +32,37 @@ exports.postUsers = async (req, res) => {
   }).options({ abortEarly: false });
 
   const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body; 
-  const { gotError } = schema.validate({ name, username,  password, contact, address, state, city, email, role, blood_group});
+  const { gotError } = schema.validate({ name, username, password, contact, address, state, city, email, role, blood_group});
   if (gotError) {
     return res.json( {message: gotError.details[0].message});
   }; 
-
-  const hashPassword = await bcrypt.hash(password,10);
-  const userInfo = {name, username, hashPassword, contact, address, state, city, email, role, blood_group};
+  const userInfo = {name, username, password , contact, address, state, city, email, role, blood_group};
+  userInfo.password = await bcrypt.hash(password,10);
   userInfo.created_by = username;
   userInfo.updated_by = username;
   userInfo.status = 'active';
   const checkEmail = await service.checkEmail(email);
   const checkUsername = await service.checkUsername(username);
   if (checkEmail == null && checkUsername == null) {
+  if(role === 'user'){
   const data = await service.postUsers(userInfo);
   return success (res,data,message.registered,statusCode.Accepted);
   }
-  else{
-  return error (res," ",message.already_exists,statusCode.forbidden);
+  else if (role === 'blood_bank')
+  {
+  userInfo.status = 'deactivate';
+  const data = await service.postUsers(userInfo);
+  return success (res,data,message.under_process,statusCode.Success);
+  }else if (role === 'super_user');
+  {
+    return error(res,'change role', message.permission_denied, statusCode.BadRequest);
   }
-}catch(err){
+}
+else{
+  return error (res,'',message.already_exists,statusCode.forbidden);
+}
+}
+catch(err){
 console.log(err);
 }
 };
@@ -60,7 +71,7 @@ console.log(err);
 exports.getUsers = async (req, res) => {
   try {
     const data = await service.getUsers();
-   return success(res, data, message.success,statusCode.Success);
+ return success(res, data, message.success,statusCode.Success);
 
   } catch (err) {
     return error(res,err,message.server_error,statusCode.internal_server_error);
@@ -117,7 +128,6 @@ exports.updatedUser = async (req, res) => {
       const userData = req.data;
       const userToken = await service.userId(userData);
       const data = await service.getUser(userToken.id, req.body);
-      console.log(data);
       success(res, data,message.user_data,statusCode.Success);
     } catch (err) {
       return error(res,err,message.server_error,statusCode.internal_server_error);
@@ -184,40 +194,25 @@ exports.logoutUser = (req, res) => {
 // Pending Registration Requests of blood_banks to super_user
 exports.pendingRegister = async (req, res) => {
   try {
-    const data = await service.userId(req.data);
-
-    if (data.role == 'super_user') {
       const declineReq = await service.bloodBankRegisterReq();
       if (declineReq == null) {
         return success(res, 'data not found', 'No requests available',statusCode.Success);
-      }
-      return success(res, declineReq, 'All requests',statusCode.Success);
-    }
-    return error(res, 'error!', 'do not have permission!', 400);
-  } catch (err) {
+      }return success(res, declineReq, 'All requests',statusCode.Success);
+    } 
+    catch (err) {
     return error(res,err,message.server_error,statusCode.internal_server_error);
-  }
+}
 };
 
 // Accept Registration Requests from blood_bank by super_user
 exports.AcceptedRequests = async (req, res) => {
   try {
-    const data = await service.userId(req.data);
-
-    if (data.role == 'super_user') {
-      const requestAccept = await service.acceptedRequests(req.body.username);
+      const requestAccept = await service.acceptedRequests(req.body.id);
       if (requestAccept != null) {
-        return success(
-          res,
-          requestAccept,
-          'your request has been approved',
-          200,
-        );
+        return success(res,requestAccept,message.request_approved,statusCode.Success);
       }
-      return error(res, 'error!', 'do not have permission!', 400);
-    }
+    return error(res, 'error!', 'do not have permission!', 400);
   } catch (err) {
-    console.log(err);
     return error(res, 'error!', 'Internal server error', 500);
   }
 };
@@ -225,15 +220,10 @@ exports.AcceptedRequests = async (req, res) => {
 // Decline Registration Requests from blood_bank by super_user
 exports.declineRegister = async (req, res) => {
   try {
-    const data = await service.userId(req.data);
-
-    if (data.role == 'super_user') {
       const declineReq = await service.declineRequests(req.body.username);
       if (declineReq !== null) {
-        return success(res, declineReq, 'your request has been declined', 200);
-      }
-      return error(res, 'error!', 'do not have permission!', 400);
-    }
+      return success(res, declineReq, 'your request has been declined', 200);
+      }return error(res, 'error!', 'do not have permission!', 400);
   } catch (err) {
     console.log(err);
     return error(res, 'error!', 'Internal server error', 500);
@@ -263,7 +253,6 @@ exports.patientSendRequests = async (req, res) => {
         bloodbankId: chooseBloodBank.id,
       });
       if (requestData) {
-        // eslint-disable-next-line no-unused-vars
         const paymentDetail = await paymentService.paymentBill({
           status: 'pending',
           created_by: req.body.bloodBank,
@@ -306,7 +295,7 @@ exports.donorSendRequest = async (req, res) => {
     console.log(err);
   }
 };
-// function to cancel request
+// function to cancel blood request
 exports.cancelRequest = async (req, res) => {
   try {
     const userId = req.data;
