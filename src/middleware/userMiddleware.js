@@ -1,27 +1,9 @@
 const jwt = require('jsonwebtoken');
 const { success , error } = require('../utils/user_utils');
+const userService = require('../services/user_service');
 const message = require('../utils/message');
 const statusCode = require('../utils/statusCode');
 const userMiddleware = require('../utils/user_utils');
-
-// /* @params:req,res,next,
-//   @Request:req.body
-//   @Response:res.status(400)
-//   @Description:middleware to update user data
-// */
-// exports.updatedUser = (req, res, next) => {
-//   try {
-//     const user = req.body;
-//     const response = userMiddleware.updateUser(user);
-//     if (response.error) {
-//       error(res, response.error.details[0].message, 'error occured while updating user', 400);
-//     } else {
-//       next();
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
 
 /* @params:req,res,next
   @Request:req.body
@@ -44,7 +26,6 @@ exports.verifyToken = (req, res, next) => {
   if (token) {
     try {
       const validId = jwt.verify(token, process.env.JWT_SECRET_KEY);
-      // console.log(validId);
       req.data = validId.id;
       next();
     } catch (err) {
@@ -56,8 +37,10 @@ exports.verifyToken = (req, res, next) => {
 };
 
 exports.roleCheckUser= async(req,res,next) => {
-  try{const userData = req.data;
-  const checkRole = userData.role;
+  try{
+    const userId = req.data;
+    const userData = await userService.userId(userId);
+    const checkRole = userData.role;
   if(checkRole != 'user'){ return error(res,'error', message.permission_denied,statusCode.forbidden)}
   if(checkRole == null){ return error(res,'',message.not_exists,statusCode.forbidden)};
   }
@@ -69,8 +52,10 @@ exports.roleCheckUser= async(req,res,next) => {
 };
 
 exports.roleCheckBloodBank= async(req,res,next) => {
-  try{const userData = req.data;
-  const checkRole = userData.role;
+  try{
+    const userId = req.data;
+    const userData = await userService.userId(userId);
+    const checkRole = userData.role;
   if(checkRole != 'blood_bank'){ return error(res,'error', message.permission_denied,statusCode.forbidden)}
   if(checkRole == null){ return error(res,'',message.not_exists,statusCode.forbidden)};
   }
@@ -82,7 +67,9 @@ exports.roleCheckBloodBank= async(req,res,next) => {
 };
 
 exports.roleCheckSuperUser= async(req,res,next) => {
-  try{const userData = req.data;
+  try{
+  const userId = req.data;
+  const userData = await userService.userId(userId);
   const checkRole = userData.role;
   if(checkRole != 'super_user'){ return error(res,'error', message.permission_denied,statusCode.forbidden)}
   if(checkRole == null){ return error(res,'',message.not_exists,statusCode.forbidden)};
