@@ -1,5 +1,4 @@
-/* eslint-disable linebreak-style */
-const {
+ const {
   Model,
 } = require('sequelize');
 
@@ -18,7 +17,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   userAction.init({
-
     blood_group: {
       type: DataTypes.STRING,
     },

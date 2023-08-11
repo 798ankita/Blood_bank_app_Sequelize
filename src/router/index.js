@@ -1,6 +1,4 @@
-/* eslint-disable linebreak-style */
 const express = require('express');
-
 const router = express.Router();
 const userMiddleware = require('../middleware/userMiddleware');
 const userRoutes = require('./userRoutes');
@@ -13,9 +11,6 @@ router.get('/users', userRoutes.routeAllUsers);
 // route to create user
 router.post('/register',userRoutes.routeRegisterUsers);
 
-// route to get one user
-router.get('/user', userMiddleware.verifyToken,userMiddleware.roleCheckUser,userRoutes.routeOneUser);
-
 // route to delete a user
 router.delete('/delete', userMiddleware.verifyToken,userMiddleware.roleCheckUser,userRoutes.routeDeleteUser);
 
@@ -26,7 +21,7 @@ router.patch('/login', userMiddleware.login, userRoutes.routeLoginUser);
 router.put('/logout', userMiddleware.verifyToken, userRoutes.routelogoutUser);
 
 // route to update a user
-router.put('/updateUser', userMiddleware.verifyToken, userRoutes.routeUpdateUser);
+router.put('/updateUser', userMiddleware.verifyToken,userRoutes.routeUpdateUser);
 
 // route to see list of all blood banks.
 router.get('/allBloodBanksList', bloodBank.allBloodBankDetail);
@@ -49,7 +44,7 @@ router.patch('/user/completePayment', userMiddleware.verifyToken,userMiddleware.
 router.post('/register/blood_bank',userRoutes.routeRegisterUsers);
 
 // route to login a blood_bank
-router.patch('/login/blood_bank', userMiddleware.login, userRoutes.routeLoginUser);
+router.patch('/login/blood_bank', userMiddleware.login,userRoutes.routeLoginUser);
 
 // route to add blood bank details.
 router.post('/addBloodBankDetails', userMiddleware.verifyToken,userMiddleware.roleCheckBloodBank,bloodBank.createBloodBank);

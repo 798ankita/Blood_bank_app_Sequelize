@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 const userCtrl = require('../controller/userController');
 const actionCtrl = require('../controller/actionController');
 /** *********************************Users*********************************** */
@@ -7,9 +6,6 @@ exports.routeAllUsers = userCtrl.getUsers;
 
 // route to create user
 exports.routeRegisterUsers = userCtrl.postUsers;
-
-// route to get one user
-exports.routeOneUser = userCtrl.getUser;
 
 // route to delete a user
 exports.routeDeleteUser = userCtrl.deleteUser;

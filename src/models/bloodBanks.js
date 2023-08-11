@@ -1,6 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable lines-around-directive */
-
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {

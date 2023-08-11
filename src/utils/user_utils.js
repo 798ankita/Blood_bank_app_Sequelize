@@ -3,7 +3,8 @@ const getId = require('../services/user_service');
 const { success, error } = require('../utils/user_utils');
 // generate token
 exports.jwtLogin = async (data) => {
-  const userId = await getId.checkUsername(data.username);
+  const username = data.username;
+  const userId = await getId.findUser({username});
   if (userId) {
     return jwt.sign(
       { id: userId.id, username: userId.username },
