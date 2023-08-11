@@ -19,9 +19,9 @@ exports.addBloodPrice = async (data) => {
 /* @Params:bloodBankId
   @Description:This function find existing bloodbank id in blood price table.
 */
-exports.findId = async (bloodBankId) => {
+exports.findId = async (attribute) => {
   try {
-    const data = await bloodPrice.findOne({ where: { bloodBankId } });
+    const data = await bloodPrice.findOne({ where: attribute });
     return data;
   } catch (err) {
     console.log(err);

@@ -10,10 +10,11 @@ const { success, error } = require('../utils/user_utils');
 exports.bldBankDetails = async (req, res) => {
   try {
     const userId = req.data;
-    const userToken = await userService.userId(userId);
-    const findId = await bloodBankService.findId(userId);
+    const userToken = await userService.findUser({userId});
+    const Id = userToken.id;
+    const findId = await bloodBankService.findId({userId});
     if (userToken.status == 'active'&& findId == null) {
-      const details = await bloodBankService.bloodBankDetail(userToken.id, {
+      const details = await bloodBankService.bloodBankDetail(Id , {
         name: req.body.name,
         logo: req.body.logo,
         address: req.body.address,
@@ -52,9 +53,11 @@ exports.allBloodBanks = async (req, res) => {
 exports.bloodInventory = async (req, res) => {
   try {
     const userId = req.data;
-    const userToken = await userService.userId(userId);
-    const bloodBankId = await bloodBankService.findId(userToken.id);
-    const allData = await inventoryService.findId(bloodBankId.id);
+    const userToken = await userService.findUser({userId});
+    const Id = userToken.id;
+    const bloodBankId = await bloodBankService.findId({Id});
+    const bloodBank = bloodBankId.id;
+    const allData = await inventoryService.findInventory({bloodBank});
     if (bloodBankId.status == 'active' && allData == null || allData < 1){
       const details = await inventoryService.addInventory({
         AB_positive: req.body.AB_positive,
@@ -83,9 +86,10 @@ exports.bloodPrice = async (req, res) => {
   try {
     const userId = req.data;
     // const userToken = await userService.userId(userId);
-    const bloodBankId = await bloodBankService.findId(userId);
-    const inventoryData = await inventoryService.findId(bloodBankId.id);
-    const priceData = await bloodPriceService.findId(bloodBankId.id);
+    const bloodBankId = await bloodBankService.findId({userId});
+    const bankId = bloodBankId.id;
+    const inventoryData = await inventoryService.findInventory({bankId});
+    const priceData = await bloodPriceService.findId({bankId});
     if (bloodBankId.status == 'active' && inventoryData != null && priceData == null) {
       const details = await bloodPriceService.addBloodPrice({
         AB_positive: req.body.AB_positive,
@@ -112,8 +116,10 @@ exports.bloodPrice = async (req, res) => {
 // update inventory details.
 exports.updatedInventory = async (req, res) => {
   try {
-    const userToken = await userService.userId(req.data);
-    const bloodBank = await bloodBankService.findId(userToken.id);
+    const reqData = req.data;
+    const userToken = await userService.findUser({reqData});
+    const userId = userToken.id;
+    const bloodBank = await bloodBankService.findId({userId});
     if (bloodBank.status == 'active') {
       const data = await inventoryService.updateInventory(
         userToken.id,
@@ -131,8 +137,10 @@ exports.updatedInventory = async (req, res) => {
 // update blood price per unit details.
 exports.updateBloodPrice = async (req, res) => {
   try {
-    const userToken = await userService.userId(req.data);
-    const bloodBank = await bloodBankService.findId(userToken.id);
+    const data = req.data;
+    const userToken = await userService.findUser({data});
+    const userId = userToken.id;
+    const bloodBank = await bloodBankService.findId({userId});
     // const bloodBankId = await bloodPriceService.findId(bloodBank.id);
     if (bloodBank.status == 'active') {
       const data = await bloodPriceService.updatePriceDetails(

@@ -9,8 +9,10 @@ const { success, error } = require('../utils/user_utils');
 // controller to get all request created by users for blood
 exports.getAllBloodRequests = async (req, res) => {
   try {
-    const data = await userService.userId(req.data);
-    const requestData = await actionService.findRequests(data.id);
+    const reqId = req.data;
+    const data = await userService.findUser({reqId});
+    const Id = data.id;
+    const requestData = await actionService.findRequests({ Id });
     if (requestData.length > 0) {
       return success(res, requestData, 'All requests for blood', 200);
     }
@@ -24,10 +26,12 @@ exports.getAllBloodRequests = async (req, res) => {
 // Accept blood requests by blood bank of patient
 exports.acceptBloodRequest = async (req, res) => {
   try {
-    const data = await userService.userId(req.data);
-    const bloodBank = await bloodBankService.findId(data.id);
-    const requestData = await actionService.findRequestId(req.body.id);
-
+    const user = req.data;
+    const data = await userService.findUser({user});
+    const Id = data.id;
+    const bloodBank = await bloodBankService.findId({ Id });
+    const bloodbankId = req.body.id;
+    const requestData = await actionService.findRequestId({bloodbankId});
     if (
       requestData != null
       && requestData.status == 'pending'
@@ -42,7 +46,7 @@ exports.acceptBloodRequest = async (req, res) => {
         const bloodBankId = requestData.bloodbankId;
         const reqBloodGroup = requestData.blood_group;
         const reqBloodUnits = requestData.blood_unit;
-        const inventory = await inventoryServices.findId(bloodBankId);
+        const inventory = await inventoryServices.findInventory({bloodBankId});
         const inventoryBlood = inventory[reqBloodGroup];
         const totalBloodUnit = inventoryBlood - reqBloodUnits;
         const mydata = {};
@@ -86,17 +90,18 @@ exports.acceptBloodRequest = async (req, res) => {
 exports.generateBill = async (req, res) => {
   try {
     //const userData = await userService.userId(req.data);
-    const requestData = await actionService.findRequestId(req.body.id);
+    const reqId = req.body.id;
+    const requestData = await actionService.findRequestId({reqId});
+    const reqBloodBankId =requestData.bloodbankId ;
     const reqBloodGroup = requestData.blood_group;
     const reqBloodUnits = requestData.blood_unit;
-    const bloodPrice = await bloodPriceService.findId(requestData.bloodbankId);
+    const bloodPrice = await bloodPriceService.findId({ reqBloodBankId });
     const priceTableBlood = bloodPrice[reqBloodGroup];
     const totalAmount = priceTableBlood * reqBloodUnits;
-    const checkPaymentId = await paymentService.findReqId(requestData.id);
-    if (
-      checkPaymentId.status == 'pending'
-      && requestData.status == 'approved'
-      && requestData.bloodbankId == bloodPrice.bloodBankId
+    const requestDataId = requestData.id;
+    const checkPaymentId = await paymentService.findReqId({requestDataId});
+    if (checkPaymentId.status == 'pending'&& requestData.status == 'approved'
+      && reqBloodBankId == bloodPrice.bloodBankId
     ) {
       const updateBillAmount = await paymentService.updateAmount(
         requestData.id,
@@ -118,9 +123,12 @@ exports.generateBill = async (req, res) => {
 // increment in inventory while collecting blood from donor.
 exports.bloodCollected = async (req, res) => {
   try {
-    const data = await userService.userId(req.data);
-    const requestData = await actionService.findRequestId(req.body.id);
-    const bloodBank = await bloodBankService.findId(data.id);
+    const reqData = req.data;
+    const reqId = req.body.id;
+    const data = await userService.findUser({reqData});
+    const dataId = data.id;
+    const requestData = await actionService.findRequestId({reqId});
+    const bloodBank = await bloodBankService.findId({dataId});
     if (
       requestData != null
     && requestData.status == 'approved'
@@ -130,7 +138,7 @@ exports.bloodCollected = async (req, res) => {
       const bloodBankId = requestData.bloodbankId;
       const reqBloodGroup = requestData.blood_group;
       const reqBloodUnits = requestData.blood_unit;
-      const inventory = await inventoryServices.findId(bloodBankId);
+      const inventory = await inventoryServices.findInventory({bloodBankId});
       const inventoryBlood = inventory[reqBloodGroup];
       const totalBloodUnit = inventoryBlood + reqBloodUnits;
       const mydata = {};

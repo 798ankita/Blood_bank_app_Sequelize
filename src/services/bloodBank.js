@@ -1,9 +1,4 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-unused-vars */
-/* eslint-disable consistent-return */
-/* eslint-disable linebreak-style */
 const db = require('../models/index');
-
 const { bloodBank } = db;
 
 /* @Params:id,data
@@ -21,9 +16,9 @@ exports.bloodBankDetail = async (id, data) => {
 /* @Params:UserId
    @Description:This function find bloodbank by id.
 */
-exports.findId = async (UserId) => {
+exports.findId = async (attribute) => {
   try {
-    const user = await bloodBank.findOne({ where: { UserId } });
+    const user = await bloodBank.findOne({ where: attribute });
     return user;
   } catch (err) {
     console.log(err);
@@ -42,14 +37,3 @@ exports.allBldBankData = async (data) => {
   }
 };
 
-/* @Params:username
-   @Description:This function find bloodbank by name
-*/
-exports.findName = async (username) => {
-  try {
-    const user = await bloodBank.findOne({ where: { created_by: username } });
-    return user;
-  } catch (err) {
-    console.log(err);
-  }
-};

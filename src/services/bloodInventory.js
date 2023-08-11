@@ -1,8 +1,4 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable consistent-return */
-/* eslint-disable linebreak-style */
 const db = require('../models/index');
-
 const { bloodInventory } = db;
 
 /* @Params:data
@@ -17,26 +13,12 @@ exports.addInventory = async (data) => {
   }
 };
 
-/* @Params:bloodBankId
-  @Description:This function find existing user's id
-*/
-exports.findId = async (bloodBankId) => {
-  try {
-    const data = await bloodInventory.findOne({
-      where: { bloodBankId },
-    });
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 /* @Params:id
   @Description:This function to check blood availability
 */
-exports.findInventory = async (id) => {
+exports.findInventory = async (attribute) => {
   try {
-    const data = await bloodInventory.findOne({ where: { id } });
+    const data = await bloodInventory.findOne({ where: attribute });
     return data;
   } catch (err) {
     console.log(err);

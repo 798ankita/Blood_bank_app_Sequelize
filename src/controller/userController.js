@@ -41,8 +41,8 @@ exports.postUsers = async (req, res) => {
   userInfo.created_by = username;
   userInfo.updated_by = username;
   userInfo.status = 'active';
-  const checkEmail = await service.checkEmail(email);
-  const checkUsername = await service.checkUsername(username);
+  const checkEmail = await service.findUser({email:email});
+  const checkUsername = await service.findUser({username:username});
   if (checkEmail == null && checkUsername == null) {
   if(role === 'user'){
   const data = await service.postUsers(userInfo);
@@ -63,7 +63,7 @@ else{
 }
 }
 catch(err){
-console.log(err);
+  return error(res,err,message.server_error,statusCode.internal_server_error);
 }
 };
 
@@ -78,60 +78,35 @@ exports.getUsers = async (req, res) => {
   }
 };
 
-//update a user
-// exports.updatedUser = async (req, res) => {
-//   try {
-//     const schema = Joi.object({
-//       name: Joi.string().min(3).max(40),
-//       username: Joi.string().alphanum().min(3).max(30),
-//       password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
-//       contact: Joi.number().integer().min(10),
-//       address: Joi.string().max(100),
-//       state: Joi.string().max(15),
-//       city: Joi.string().max(15),
-//       email: Joi.string().email({minDomainSegments: 2,tlds: { allow: ['com', 'net'] },}),
-//       role: Joi.string().min(4).max(40),
-//       blood_group: Joi.string().max(15),
-//     }).options({ abortEarly: false });
-  
-//     const { name, username, password, contact, address, state, city, email, role, blood_group} = req.body; 
-//     const { gotError } = schema.validate({ name, username,  password, contact, address, state, city, email, role, blood_group});
-//     if (gotError) {
-//       return res.json( {message: gotError.details[0].message});
-//     }; 
-//   const userData = req.data;
-//   const userToken = await service.userId(userData);
-//   const data = await service.updateUser(userToken.id, req.body);
-//   return success(res, data, message.updated,statusCode.Success);
-// } catch (err) {
-//   return error(res,err,message.server_error,statusCode.internal_server_error);
-// }
-// };
-
-
 // update a user
 exports.updatedUser = async (req, res) => {
     try {  
-    const userData = req.data;
-    const userToken = await service.userId(userData);
-    const data = await service.updateUser(userToken.id, req.body);
+      const schema = Joi.object({
+              name: Joi.string().min(3).max(40),
+              password: Joi.string().pattern(/^[a-zA-Z0-9@]{3,30}$/),
+              contact: Joi.number().integer().min(10),
+              address: Joi.string().max(100),
+              state: Joi.string().max(15),
+              city: Joi.string().max(15),
+              email: Joi.string().email({minDomainSegments: 2,tlds: { allow: ['com', 'net'] },}),
+              blood_group: Joi.string().max(15),
+            }).options({ abortEarly: false });
+    
+  const { name,password, contact, address, state, city, email,blood_group} = req.body; 
+  const { gotError } = schema.validate({ name, password, contact, address, state, city, email, blood_group});
+  if (gotError) {
+    return res.json( {message: gotError.details[0].message});
+  }; 
+  const userInfo = {name,password , contact, address, state, city, email,blood_group};
+  //getting user data from token
+  const userData = req.data;
+  const userToken = await service.findUser({id:userData});
+  const userId = userToken.id;
+  const data = await service.updateUser(userId,userInfo);
     return success(res, data, message.updated,statusCode.Success);
   } catch (err) {
     return error(res,err,message.server_error,statusCode.internal_server_error);
   }
-  };
-
-// get one user
-
-  exports.getUser = async (req, res) => {
-    try {
-      const userData = req.data;
-      const userToken = await service.userId(userData);
-      const data = await service.getUser(userToken.id, req.body);
-      success(res, data,message.user_data,statusCode.Success);
-    } catch (err) {
-      return error(res,err,message.server_error,statusCode.internal_server_error);
-    }
   };
 
 // delete a user
@@ -146,15 +121,15 @@ exports.deleteUser = async (req, res) => {
 };
 
 // login a user
-
 exports.loginUser = async (req, res) => {
   try {
-    const loginData = await service.loginAuth(req.body.username);
+    const username = req.body.username;
+    const password = req.body.password;
+    const loginData = await service.findUser({username:username});
+    const logPassword = loginData.password;
+    const comparePwd = await bcrypt.compare(password,logPassword);
     if (loginData != null) {
-      if (
-        (await bcrypt.compare(req.body.password, loginData.password))
-        && loginData.status == 'active'
-      ) {
+      if ( comparePwd && loginData.status == 'active') {
         // Passwords matched
         return res.status(200).json({
           status: '200',
@@ -179,7 +154,6 @@ exports.loginUser = async (req, res) => {
 exports.logoutUser = (req, res) => {
   try {
     const token = req.headers['x-access-token'];
-    // eslint-disable-next-line no-unused-vars
     jwt.sign(token, ' ', { expiresIn: 1 }, (logout, err) => {
       if (logout) {
         return success(res, '', 'You have been Logged Out', 200);
@@ -207,7 +181,8 @@ exports.pendingRegister = async (req, res) => {
 // Accept Registration Requests from blood_bank by super_user
 exports.AcceptedRequests = async (req, res) => {
   try {
-      const requestAccept = await service.acceptedRequests(req.body.id);
+       const reqId = req.body.id;
+      const requestAccept = await service.acceptedRequests(reqId);
       if (requestAccept != null) {
         return success(res,requestAccept,message.request_approved,statusCode.Success);
       }
@@ -220,7 +195,8 @@ exports.AcceptedRequests = async (req, res) => {
 // Decline Registration Requests from blood_bank by super_user
 exports.declineRegister = async (req, res) => {
   try {
-      const declineReq = await service.declineRequests(req.body.username);
+      const reqUsername = req.body.username;
+      const declineReq = await service.declineRequests(reqUsername);
       if (declineReq !== null) {
       return success(res, declineReq, 'your request has been declined', 200);
       }return error(res, 'error!', 'do not have permission!', 400);
@@ -236,9 +212,10 @@ exports.patientSendRequests = async (req, res) => {
     const userId = req.data;
     const bloodGroup = req.body.blood_group;
     const bloodBankName = req.body.bloodBank;
-    const userToken = await service.userId(userId);
-    const chooseBloodBank = await bloodBankservice.findName(bloodBankName);
-    const checkForBlood = await bloodInventService.findInventory(chooseBloodBank.id);
+    const userToken = await service.findUser({id:userId});
+    const chooseBloodBank = await bloodBankservice.findId({bloodBankName});
+    const bloodBankId = chooseBloodBank.id;
+    const checkForBlood = await bloodInventService.findInventory({bloodBankId});
 
     if (checkForBlood[bloodGroup] > 0) {
       const requestData = await service.sendRequest({
@@ -276,8 +253,8 @@ exports.donorSendRequest = async (req, res) => {
   try {
     const userId = req.data;
     const bloodBankName = req.body.bloodBank;
-    const userToken = await service.userId(userId);
-    const chooseBloodBank = await bloodBankservice.findName(bloodBankName);
+    const userToken = await service.findUser({userId});
+    const chooseBloodBank = await bloodBankservice.findId({bloodBankName});
     const requestData = await service.sendRequest({
       blood_group: userToken.blood_group,
       action: 'donor',
@@ -300,7 +277,7 @@ exports.cancelRequest = async (req, res) => {
   try {
     const userId = req.data;
     const requestId = req.body.id;
-    const userToken = await service.userId(userId);
+    const userToken = await service.findUser({id:userId});
     const findRequest = await actionService.cancelRequestForBld(requestId, {
       updated_by: userToken.username,
     });

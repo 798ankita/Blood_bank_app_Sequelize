@@ -1,8 +1,4 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable consistent-return */
-/* eslint-disable linebreak-style */
 const db = require('../models/index');
-
 const { action } = db;
 
 /* @Params:id
@@ -21,35 +17,24 @@ exports.cancelRequestForBld = async (id) => {
 };
 
 /* @Params:id
-   @Description:This function find request by bloodbankid
+   @Description:This function find request by id
 */
-exports.findRequestId = async (id) => {
+exports.findRequestId = async (attribute) => {
   try {
-    const requestId = await action.findOne({ where: { id } });
+    const requestId = await action.findOne({ where: attribute });
     return requestId;
   } catch (err) {
     console.log(err);
   }
 };
 
-/* @Params:id
-   @Description:This function find request by userid.
-*/
-exports.findUserId = async (id) => {
-  try {
-    const requestId = await action.findOne({ where: { id } });
-    return requestId;
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 /* @Params:id,data
   @Description:function to get all requests data by bloodbank id
 */
-exports.findRequests = async (id) => {
+exports.findRequests = async (attribute) => {
   try {
-    const users = await action.findAll({ where: { bloodbankId: id } });
+    const users = await action.findAll({ where: attribute });
     return users;
   } catch (err) {
     console.log(err);

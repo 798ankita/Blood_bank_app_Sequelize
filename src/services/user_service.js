@@ -1,5 +1,4 @@
 const db = require('../models/index');
-
 const User = db.user;
 const { bloodBank } = db;
 const { action } = db;
@@ -16,48 +15,12 @@ exports.postUsers = async (userData) => {
   }
 };
 
-// /* @Params:superUserData
-//    @Description:This function creates superuser
-// */
-// exports.postsuperUsers = async (userData) => {
-//   try {
-//     const user = await superUser.create(userData);
-//     return user;
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
-/* @Params:userMail
-   @Description:This function find existing user with email
+/* @Params:attribute
+   @Description:This function find existing user 
 */
-exports.checkEmail = async (userMail) => {
+exports.findUser = async (attribute) => {
   try {
-    const user = await User.findOne({ where: { email: userMail } });
-    return user;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-/* @Params:username
-  @Description:This function find existing user with username
-*/
-exports.checkUsername = async (username) => {
-  try {
-    const user = await User.findOne({ where: { username } });
-    return user;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-/* @Params:id
-  @Description:This function find existing user's id
-*/
-exports.userId = async (id) => {
-  try {
-    const user = await User.findOne({ where: { id:id } });
+    const user = await User.findOne({ where: attribute });
     return user;
   } catch (err) {
     console.log(err);
@@ -77,29 +40,13 @@ exports.getUsers = async (data) => {
 };
 
 /* @Params:userData
-  @Description:function to get one user data
-  */
-exports.getUser = async (id) => {
-  try {
-    const user = await User.findOne(data, {
-      where: {
-        id,
-      },
-    });
-    return user;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-/* @Params:userData
   @Description:function to update a user data
   */
 exports.updateUser = async (id, data) => {
   try {
     const user = await User.update(data, {
       where: {
-        id,
+        id:id
       },
     });
     return user;
@@ -121,18 +68,6 @@ exports.deleteUser = async (id) => {
     return user;
   } catch (err) {
     console.log(err);
-  }
-};
-
-/* @Params:userData
-  @Description:function to update a user data
-  */
-exports.loginAuth = async (username) => {
-  try {
-    const user = await User.findOne({ where: { username } });
-  return user;
-  } catch (err) {
-    console.log('user not exist');
   }
 };
 
@@ -175,18 +110,6 @@ exports.declineRequests = async (username) => {
         username,
       },
     });
-    return user;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-/* @Params:name
-  @Description:This function find existing blood bank name.
-*/
-exports.findName = async (name) => {
-  try {
-    const user = await bloodBank.findOne({ where: { name } });
     return user;
   } catch (err) {
     console.log(err);

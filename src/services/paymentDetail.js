@@ -1,7 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable eol-last */
-/* eslint-disable linebreak-style */
-/* eslint-disable consistent-return */
 const db = require('../models/index');
 
 const paymentDetails = db.paymentDetail;
@@ -40,9 +36,9 @@ exports.updateAmount = async (id, data) => {
 /* @Params:id
    @Description:This function find request id in payment table
 */
-exports.findReqId = async (id) => {
+exports.findReqId = async (attribute) => {
   try {
-    const requestId = await paymentDetails.findOne({ where: { userActionId: id } });
+    const requestId = await paymentDetails.findOne({ where: attribute });
     return requestId;
   } catch (err) {
     console.log(err);
