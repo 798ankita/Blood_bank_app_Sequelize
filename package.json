@@ -24,7 +24,8 @@
     "nodemailer": "^6.9.4",
     "nodemon": "^3.0.1",
     "readme-md-generator": "^1.0.0",
-    "sequelize": "^6.32.1"
+    "sequelize": "^6.32.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "eslint-config-airbnb-base": "^15.0.0",
