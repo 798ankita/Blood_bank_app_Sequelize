@@ -57,7 +57,7 @@ exports.checkUsername = async (username) => {
 */
 exports.userId = async (id) => {
   try {
-    const user = await User.findOne({ where: { id } });
+    const user = await User.findOne({ where: { id:id } });
     return user;
   } catch (err) {
     console.log(err);
@@ -67,7 +67,7 @@ exports.userId = async (id) => {
 /* @Params:usersData
   @Description:function to get all users data
 */
-exports.getUsers = async () => {
+exports.getUsers = async (data) => {
   try {
     const users = await User.findAll({});
     return users;
@@ -137,7 +137,7 @@ exports.loginAuth = async (username) => {
 };
 
 // getting all Pending requests from blood bank for registration
-exports.bloodBankRegisterReq = async () => {
+exports.bloodBankRegisterReq = async (data) => {
   try {
     const regiteredBldBank = await User.findAll({
       where: {
@@ -153,11 +153,11 @@ exports.bloodBankRegisterReq = async () => {
 /* @Params:username
   @Description:function to accept blood bank requests.
  */
-exports.acceptedRequests = async (username) => {
+exports.acceptedRequests = async (id) => {
   try {
     const acceptRequest = await User.update(
       { status: 'active' },
-      { where: { username } },
+      { where: { id:id } },
     );
     return acceptRequest;
   } catch (err) {
