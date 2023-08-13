@@ -168,7 +168,8 @@ exports.logoutUser = (req, res) => {
 // Pending Registration Requests of blood_banks to super_user
 exports.pendingRegister = async (req, res) => {
   try {
-      const declineReq = await service.bloodBankRegisterReq();
+     const reqData = req.data;
+      const declineReq = await service.bloodBankRegisterReq({ });
       if (declineReq == null) {
         return success(res, 'data not found', 'No requests available',statusCode.Success);
       }return success(res, declineReq, 'All requests',statusCode.Success);
@@ -178,10 +179,10 @@ exports.pendingRegister = async (req, res) => {
 }
 };
 
-// Accept Registration Requests from blood_bank by super_user
+//Accept Registration Requests from blood_bank by super_user.
 exports.AcceptedRequests = async (req, res) => {
   try {
-       const reqId = req.body.id;
+      const reqId = req.body.id;
       const requestAccept = await service.acceptedRequests(reqId);
       if (requestAccept != null) {
         return success(res,requestAccept,message.request_approved,statusCode.Success);
