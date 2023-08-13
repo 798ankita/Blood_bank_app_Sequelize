@@ -17,7 +17,6 @@ exports.login = async (req, res, next) => {
 };
 
 /* @params:req,res,next
-  @Request:req.body
   @Response:res.status(403),res.status(401)
   @description:middleware to verify jwt token
 */
@@ -35,7 +34,10 @@ exports.verifyToken = (req, res, next) => {
     return error(res, 'error', 'Unauthorized user!', 500);
   }
 };
-
+/*@params:req,res,next
+ @Request:req.data
+ @Description:function to check role of user
+  */
 exports.roleCheckUser= async(req,res,next) => {
   try{
     const userId = req.data;
@@ -45,12 +47,15 @@ exports.roleCheckUser= async(req,res,next) => {
   if(checkRole == null){ return error(res,'',message.not_exists,statusCode.forbidden)};
   }
   catch(err){
-   console.log(err);
    return error(res,'',message.server_error,statusCode.internal_server_error);
   }
   next();
 };
 
+/*@params:req,res,next
+ @Request:req.data
+ @Description:function to check role of blood bank
+  */
 exports.roleCheckBloodBank= async(req,res,next) => {
   try{
     const userId = req.data;
@@ -60,12 +65,15 @@ exports.roleCheckBloodBank= async(req,res,next) => {
   if(checkRole == null){ return error(res,'',message.not_exists,statusCode.forbidden)};
   }
   catch(err){
-   console.log(err);
    return error(res,'',message.server_error,statusCode.internal_server_error);
   }
   next();
 };
 
+/*@params:req,res,next
+ @Request:req.data
+ @Description:function to check role of super user
+  */
 exports.roleCheckSuperUser= async(req,res,next) => {
   try{
   const userId = req.data;
@@ -75,7 +83,6 @@ exports.roleCheckSuperUser= async(req,res,next) => {
   if(checkRole == null){ return error(res,'',message.not_exists,statusCode.forbidden)};
   }
   catch(err){
-   console.log(err);
    return error(res,'',message.server_error,statusCode.internal_server_error);
   }
   next();

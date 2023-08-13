@@ -114,7 +114,7 @@ exports.deleteUser = async (req, res) => {
   try {
     const userId = req.data;
     await service.deleteUser(userId);
-    success(res,' ',message.user_delete,statusCode.Success);
+    success(res,'',message.user_delete,statusCode.Success);
   } catch (err) {
     return error(res,err,message.server_error,statusCode.internal_server_error);
   }
