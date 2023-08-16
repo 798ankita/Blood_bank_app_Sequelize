@@ -11,6 +11,15 @@ const message = {
   request_pending: 'Request pending for approval',
   already_exists: 'Email or username already exists',
   not_exists: 'user not exists',
-  request_approved: 'Your request has been approved'
+  request_approved: 'Your request has been approved',
+  wrong_pwd: 'wrong password',
+  invalid_credentials: 'Invalid credentials',
+  logout: 'You have been Logged Out',
+  req_not_available: 'No requests available',
+  all_requests: 'All requests',
+  request_decline: 'your request has been declined',
+  request_cancelled: 'Request cancelled successfully',
+  request_generated: 'request generated successfully',
+  blood_not_available: 'requested blood not available',
 };
 module.exports = message;

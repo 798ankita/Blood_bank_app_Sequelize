@@ -3,7 +3,7 @@ const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const service = require('../services/user_service');
 const actionService = require('../services/action');
-const bloodBankservice = require('../services/bloodBank');
+const bloodBankService = require('../services/bloodBank');
 const bloodInventService = require('../services/bloodInventory');
 const paymentService = require('../services/paymentDetail');
 const { success, error } = require('../utils/user_utils');
@@ -70,7 +70,7 @@ catch(err){
 // controller to get all users
 exports.getUsers = async (req, res) => {
   try {
-    const data = await service.getUsers();
+    const data = await service.getUsers({});
  return success(res, data, message.success,statusCode.Success);
 
   } catch (err) {
@@ -138,13 +138,13 @@ exports.loginUser = async (req, res) => {
           token: req.token,
         });
       } if (loginData.status == 'deactivate') {
-        return error(res," ",message.request_pending,statusCode.forbidden);
+        return error(res,' ',message.request_pending,statusCode.forbidden);
       }
       // Passwords not matched
-      return error(res, 'invalid credentials', 'wrong password',statusCode.unauthorized);
+      return error(res, ' ',message.wrong_pwd,statusCode.unauthorized);
     }
     // invalid credentials for login
-    return error(res, 'error', 'Invalid credentials', 401);
+    return error(res, ' ',message.invalid_credentials, statusCode.unauthorized);
   } catch (err) {
     return error(res,err,message.server_error,statusCode.internal_server_error);
   }
@@ -156,12 +156,12 @@ exports.logoutUser = (req, res) => {
     const token = req.headers['x-access-token'];
     jwt.sign(token, ' ', { expiresIn: 1 }, (logout, err) => {
       if (logout) {
-        return success(res, '', 'You have been Logged Out', 200);
+        return success(res,logout, message.logout,statusCode.Success);
       }
-      return error(res, 'error', 'Internal Server Error', 500);
+      return error(res, err,message.server_error,statusCode.internal_server_error);
     });
-  } catch (err) {
-    return error(res,err,message.server_error,statusCode.internal_server_error);
+  } catch (e) {
+    return error(res,e,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -171,8 +171,8 @@ exports.pendingRegister = async (req, res) => {
      const reqData = req.data;
       const declineReq = await service.bloodBankRegisterReq({ });
       if (declineReq == null) {
-        return success(res, 'data not found', 'No requests available',statusCode.Success);
-      }return success(res, declineReq, 'All requests',statusCode.Success);
+        return success(res, ' ', message.req_not_available,statusCode.Success);
+      }return success(res, declineReq,message.all_requests,statusCode.Success);
     } 
     catch (err) {
     return error(res,err,message.server_error,statusCode.internal_server_error);
@@ -187,9 +187,9 @@ exports.AcceptedRequests = async (req, res) => {
       if (requestAccept != null) {
         return success(res,requestAccept,message.request_approved,statusCode.Success);
       }
-    return error(res, 'error!', 'do not have permission!', 400);
+    return error(res, ' ', message.permission_denied,statusCode.BadRequest);
   } catch (err) {
-    return error(res, 'error!', 'Internal server error', 500);
+    return error(res, ' ',message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -199,11 +199,11 @@ exports.declineRegister = async (req, res) => {
       const reqUsername = req.body.username;
       const declineReq = await service.declineRequests(reqUsername);
       if (declineReq !== null) {
-      return success(res, declineReq, 'your request has been declined', 200);
-      }return error(res, 'error!', 'do not have permission!', 400);
+      return success(res, declineReq,message.request_decline,statusCode.Success);
+      }return error(res, ' ',message.permission_denied,statusCode.BadRequest);
   } catch (err) {
     console.log(err);
-    return error(res, 'error!', 'Internal server error', 500);
+    return error(res, ' ',message.server_error.statusCode.internal_server_error);
   }
 };
 
@@ -214,9 +214,9 @@ exports.patientSendRequests = async (req, res) => {
     const bloodGroup = req.body.blood_group;
     const bloodBankName = req.body.bloodBank;
     const userToken = await service.findUser({id:userId});
-    const chooseBloodBank = await bloodBankservice.findId({bloodBankName});
+    const chooseBloodBank = await bloodBankService.findId({name:bloodBankName});
     const bloodBankId = chooseBloodBank.id;
-    const checkForBlood = await bloodInventService.findInventory({bloodBankId});
+    const checkForBlood = await bloodInventService.findInventory({bloodBankId:bloodBankId});
 
     if (checkForBlood[bloodGroup] > 0) {
       const requestData = await service.sendRequest({
@@ -241,9 +241,9 @@ exports.patientSendRequests = async (req, res) => {
         });
       }
 
-      return success(res, requestData, 'request generated successfully', 200);
+      return success(res, requestData,message.request_generated,statusCode.Success);
     }
-    return error(res, 'not found', 'requested blood not available', 400);
+    return error(res, ' ', message.blood_not_available,statusCode.BadRequest);
   } catch (err) {
     console.log(err);
   }
@@ -254,8 +254,8 @@ exports.donorSendRequest = async (req, res) => {
   try {
     const userId = req.data;
     const bloodBankName = req.body.bloodBank;
-    const userToken = await service.findUser({userId});
-    const chooseBloodBank = await bloodBankservice.findId({bloodBankName});
+    const userToken = await service.findUser({id:userId});
+    const chooseBloodBank = await bloodBankService.findId({name:bloodBankName});
     const requestData = await service.sendRequest({
       blood_group: userToken.blood_group,
       action: 'donor',
@@ -268,7 +268,7 @@ exports.donorSendRequest = async (req, res) => {
       UserId: userId,
       bloodbankId: chooseBloodBank.id,
     });
-    return success(res, requestData, 'request generated successfully', 200);
+    return success(res, requestData, message.request_generated,statusCode.Success);
   } catch (err) {
     console.log(err);
   }
@@ -282,7 +282,7 @@ exports.cancelRequest = async (req, res) => {
     const findRequest = await actionService.cancelRequestForBld(requestId, {
       updated_by: userToken.username,
     });
-    success(res, findRequest, 'Request cancelled successfully', 200);
+    success(res, findRequest, message.request_cancelled,statusCode.Success);
   } catch (err) {
     console.log(err);
   }

@@ -41,7 +41,7 @@ exports.verifyToken = (req, res, next) => {
 exports.roleCheckUser= async(req,res,next) => {
   try{
     const userId = req.data;
-    const userData = await userService.userId(userId);
+    const userData = await userService.findUser({id:userId});
     const checkRole = userData.role;
   if(checkRole != 'user'){ return error(res,'error', message.permission_denied,statusCode.forbidden)}
   if(checkRole == null){ return error(res,'',message.not_exists,statusCode.forbidden)};
@@ -59,7 +59,7 @@ exports.roleCheckUser= async(req,res,next) => {
 exports.roleCheckBloodBank= async(req,res,next) => {
   try{
     const userId = req.data;
-    const userData = await userService.findUser({userId});
+    const userData = await userService.findUser({id:userId});
     const checkRole = userData.role;
   if(checkRole != 'blood_bank'){ return error(res,'error', message.permission_denied,statusCode.forbidden)}
   if(checkRole == null){ return error(res,'',message.not_exists,statusCode.forbidden)};
