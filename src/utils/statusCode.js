@@ -9,6 +9,7 @@ const statusCode = {
   forbidden: 403,
   service_unavailable: 503,
   payment_required: 402,
+  already_reported: 208,
 };
 
 module.exports = statusCode;

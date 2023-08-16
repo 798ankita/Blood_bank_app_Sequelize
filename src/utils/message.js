@@ -21,5 +21,14 @@ const message = {
   request_cancelled: 'Request cancelled successfully',
   request_generated: 'request generated successfully',
   blood_not_available: 'requested blood not available',
+  blood_bank_added: 'blood bank added successfully',
+  blood_bank_already_exists: 'do not have permission to add blood bank or blood bank already added by you!',
+  all_blood_banks: 'All Blood banks data',
+  inventory_added: 'blood Inventory added successfully',
+  already_added_inventory:'already added inventory',
+  prices_added: 'blood prices added successfully',
+  already_added_prices: 'already added prices',
+  inventory_updated: 'inventory updated successfully',
+  prices_updated:'blood price updated successfully'
 };
 module.exports = message;

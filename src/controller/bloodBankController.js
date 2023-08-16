@@ -3,6 +3,7 @@ const bloodBankService = require('../services/bloodBank');
 const inventoryService = require('../services/bloodInventory');
 const bloodPriceService = require('../services/bloodPrice');
 const { success, error } = require('../utils/user_utils');
+const statusCode = require('../utils/statusCode');
 // const data = require('../middleware/userMiddleware');
 // const { bloodInventory } = require('../models');
 
@@ -24,17 +25,16 @@ exports.bldBankDetails = async (req, res) => {
         updated_by: userToken.username,
         UserId: userToken.id,
       });
-      return success(res, details, 'blood bank added successfully', 200);
+      return success(res, details, message.blood_bank_added,statusCode.Success);
     }
     return error(
       res,
-      'Permission denied',
-      'do not have permission to add blood bank or blood bank already added by you!',
-      403,
+      ' ',
+      message.blood_bank_already_exists,
+      statusCode.forbidden,
     );
   } catch (err) {
-    console.log(err);
-    return error(res, 'error', 'Internal server error!', 500);
+    return error(res, err,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -42,10 +42,9 @@ exports.bldBankDetails = async (req, res) => {
 exports.allBloodBanks = async (req, res) => {
   try {
     const data = await bloodBankService.allBldBankData();
-    return success(res, data, 'All Blood banks', 200);
+    return success(res, data,message.all_blood_banks,statusCode.Success);
   } catch (err) {
-    console.log(err);
-    return error(res, 'error!', 'internal server error', 500);
+    return error(res, err,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -72,12 +71,12 @@ exports.bloodInventory = async (req, res) => {
         updated_by: userToken.username,
         bloodBankId: bloodBankId.id,
       });
-      return success(res, details, 'blood Inventory added successfully', 200);
+      return success(res, details,message.inventory_added,statusCode.Success);
     }
-    return error(res, 'permission denied', 'already added inventory', 208);
+    return error(res, ' ',message.already_added_inventory,statusCode.already_reported);
   } catch (err) {
-    console.log(err);
-    return error(res, 'error', 'internal server error', 500);
+    throw(err);
+    return error(res,err,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -104,12 +103,12 @@ exports.bloodPrice = async (req, res) => {
         updated_by: userToken.username,
         bloodBankId: bloodBankId.id,
       });
-      return success(res, details, 'blood prices added successfully', 200);
+      return success(res, details,message.prices_added,statusCode.Success);
     }
-    return error(res, 'permission denied', 'already added prices', 208);
+    return error(res, ' ',message.already_added_prices,statusCode.already_reported);
   } catch (err) {
-    console.log(err);
-    return error(res, 'error', 'Permission denied', 403);
+    throw(err);
+    return error(res,err,message.server_error.statusCode.internal_server_error);
   }
 };
 
@@ -125,12 +124,11 @@ exports.updatedInventory = async (req, res) => {
         userToken.id,
         req.body,
       );
-      return success(res, data, 'inventory updated successfully', 200);
+      return success(res, data,message.inventory_updated,statusCode.Success);
     }
-    return error(res, error, 'process denied', 403);
+    return error(res,' ',message.permission_denied,statusCode.forbidden);
   } catch (err) {
-    console.log(err);
-    return error(res, error, 'process denied', 403);
+    return error(res, err,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -147,11 +145,11 @@ exports.updateBloodPrice = async (req, res) => {
         userToken.id,
         req.body,
       );
-      return success(res, data, 'blood price updated successfully', 200);
+      return success(res,data,message.prices_updated,statusCode.Success);
     }
-    return error(res, error, 'permission denied', 403);
+    return error(res, error,message.permission_denied,statusCode.forbidden);
   } catch (err) {
     console.log(err);
-    return error(res, error, 'permission denied', 403);
+    return error(res, err,message.server_error,statusCode.internal_server_error);
   }
 };
