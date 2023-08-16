@@ -14,12 +14,12 @@ exports.getAllBloodRequests = async (req, res) => {
     const UserId = data.id;
     const requestData = await actionService.findRequests({UserId:UserId});
     if (requestData.length > 0) {
-      return success(res, requestData, 'All requests for blood', 200);
+      return success(res, requestData,message.all_blood_requests,statusCode.Success);
     }
-    return success(res, ' ', 'requests not available', 200);
+    return success(res, ' ',message.req_not_available,statusCode.Success );
   } catch (err) {
     console.log(err);
-    return error(res, 'error', 'Internal server error', 500);
+    return error(res,err,message.server_error,statusCode.internal_server_error);
   }
 };
 
@@ -58,8 +58,8 @@ exports.acceptBloodRequest = async (req, res) => {
         return success(
           res,
           decrementData,
-          'your request has been approved, Please complete the payment',
-          202,
+          message.do_payment,
+          statusCode.Accepted,
         );
       }
     } else if (
@@ -74,15 +74,15 @@ exports.acceptBloodRequest = async (req, res) => {
       return success(
         res,
         requestAccept,
-        'request approved, scheduled blood donation date: 9/3/2023',
-        202,
+        message.donation_date_scheduled,
+        statusCode.Accepted,
       );
     } else {
-      return success(res, ' ', 'no data found', 200);
+      return success(res, ' ',message.data_not_found,statusCode.Success);
     }
   } catch (err) {
     console.log(err);
-    return error(res, 'error!', 'Internal server error', 500);
+    return error(res,err,message.server_error,statusCode_internal_server_error);
   }
 };
 
@@ -107,13 +107,13 @@ exports.generateBill = async (req, res) => {
         requestData.id,
         totalAmount,
       );
-      return success(res, updateBillAmount, 'payment complete', 200);
+      return success(res, updateBillAmount,message.payment_complete,statusCode.Success);
     }
     return error(
       res,
-      'permission denied',
-      'request can not be completed',
-      400,
+      ' ',
+      message.permission_denied,
+      statusCode.BadRequest,
     );
   } catch (err) {
     console.log(err);
@@ -150,11 +150,12 @@ exports.bloodCollected = async (req, res) => {
       return success(
         res,
         IncrementData,
-        'donation complete',
-        202,
+        message.donation_complete,
+        statusCode.Accepted,
       );
     }
   } catch (err) {
     console.log(err);
+    return error(res,' ',message.server_error,statusCode.internal_server_error);
   }
 };

@@ -29,6 +29,12 @@ const message = {
   prices_added: 'blood prices added successfully',
   already_added_prices: 'already added prices',
   inventory_updated: 'inventory updated successfully',
-  prices_updated:'blood price updated successfully'
+  prices_updated:'blood price updated successfully',
+  all_blood_requests: 'All requests for blood',
+  do_payment: 'your request has been approved, Please complete the payment',
+ donation_date_scheduled : 'request approved, scheduled blood donation date: 9/3/2023',
+ data_not_found: 'No data found',
+payment_complete:'payment complete',
+donation_complete: 'donation complete',
 };
 module.exports = message;

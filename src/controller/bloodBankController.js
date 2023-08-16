@@ -75,7 +75,6 @@ exports.bloodInventory = async (req, res) => {
     }
     return error(res, ' ',message.already_added_inventory,statusCode.already_reported);
   } catch (err) {
-    throw(err);
     return error(res,err,message.server_error,statusCode.internal_server_error);
   }
 };
@@ -107,7 +106,6 @@ exports.bloodPrice = async (req, res) => {
     }
     return error(res, ' ',message.already_added_prices,statusCode.already_reported);
   } catch (err) {
-    throw(err);
     return error(res,err,message.server_error.statusCode.internal_server_error);
   }
 };
