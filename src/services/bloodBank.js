@@ -9,7 +9,7 @@ exports.bloodBankDetail = async (id, data) => {
     const bldBankData = await bloodBank.create(data);
     return bldBankData;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -21,7 +21,7 @@ exports.findId = async (attribute) => {
     const user = await bloodBank.findOne({ where: attribute });
     return user;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -33,7 +33,7 @@ exports.allBldBankData = async (data) => {
     const allData = await bloodBank.findAll({});
     return allData;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 

@@ -9,7 +9,7 @@ exports.addInventory = async (data) => {
     const detail = await bloodInventory.create(data);
     return detail;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -21,7 +21,7 @@ exports.findInventory = async (attribute) => {
     const data = await bloodInventory.findOne({ where: attribute });
     return data;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -37,7 +37,7 @@ exports.updateInventory = async (id, data) => {
     });
     return detail;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -53,7 +53,7 @@ exports.updateAutoInventory = async (bloodId, data) => {
     });
     return change;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -69,6 +69,6 @@ exports.inventoryUpdateDonation = async (bloodId, data) => {
     });
     return change;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };

@@ -10,7 +10,7 @@ exports.paymentBill = async (data) => {
     const payment = await paymentDetails.create(data);
     return payment;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -29,7 +29,7 @@ exports.updateAmount = async (id, data) => {
     );
     return payment;
   } catch (err) {
-    console.log(err);
+  throw(err);
   }
 };
 
@@ -41,6 +41,6 @@ exports.findReqId = async (attribute) => {
     const requestId = await paymentDetails.findOne({ where: attribute });
     return requestId;
   } catch (err) {
-    console.log(err);
+  throw(err);
   }
 };

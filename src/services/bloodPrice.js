@@ -12,7 +12,7 @@ exports.addBloodPrice = async (data) => {
     const detail = await bloodPrice.create(data);
     return detail;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -24,7 +24,7 @@ exports.findId = async (attribute) => {
     const data = await bloodPrice.findOne({ where: attribute });
     return data;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -40,6 +40,6 @@ exports.updatePriceDetails = async (bloodBankId, data) => {
     });
     return detail;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };

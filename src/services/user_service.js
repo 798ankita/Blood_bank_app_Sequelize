@@ -11,7 +11,7 @@ exports.postUsers = async (userData) => {
     const user = await User.create(userData);
     return user;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -23,7 +23,7 @@ exports.findUser = async (attribute) => {
     const user = await User.findOne({ where: attribute });
     return user;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -35,7 +35,7 @@ exports.getUsers = async (data) => {
     const users = await User.findAll({});
     return users;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -51,7 +51,7 @@ exports.updateUser = async (id, data) => {
     });
     return user;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -67,7 +67,7 @@ exports.deleteUser = async (id) => {
     });
     return user;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -81,7 +81,7 @@ exports.bloodBankRegisterReq = async (data) => {
     });
     return regiteredBldBank;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -96,7 +96,7 @@ exports.acceptedRequests = async (id) => {
     );
     return acceptRequest;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -112,7 +112,7 @@ exports.declineRequests = async (username) => {
     });
     return user;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -124,6 +124,6 @@ exports.sendRequest = async (userData) => {
     const request = await action.create(userData);
     return request;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };

@@ -12,7 +12,7 @@ exports.cancelRequestForBld = async (id) => {
     );
     return request;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -24,7 +24,7 @@ exports.findRequestId = async (attribute) => {
     const requestId = await action.findOne({ where: attribute });
     return requestId;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -37,7 +37,7 @@ exports.findRequests = async (attribute) => {
     const users = await action.findAll({ where: attribute });
     return users;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
 
@@ -52,6 +52,6 @@ exports.acceptBloodRequest = async (id) => {
     );
     return acceptRequest;
   } catch (err) {
-    console.log(err);
+    throw(err);
   }
 };
